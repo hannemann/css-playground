@@ -40,7 +40,6 @@
     max-width: var(--gallery-image-width);
     aspect-ratio: 1;
     overflow: hidden;
-    position: relative;
 }
 
 .images ul {
