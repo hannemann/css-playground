@@ -1,0 +1,199 @@
+.gallery {
+    display: grid;
+    grid-template-areas: 'images' 'thumbs';
+    gap: 1em;
+    --gallery-image-width: 100vw;
+    --gallery-lightbox-width: 80vw;
+}
+
+.gallery ul {
+    list-style: none;
+}
+
+.gallery input {
+    display: none;
+}
+
+.gallery img {
+    display: block;
+}
+
+.thumbs {
+    grid-area: thumbs;
+}
+
+.thumbs ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .3em;
+    padding-inline: .3em;
+    justify-content: center;
+}
+
+.thumbs img {
+    width: 4em;
+    aspect-ratio: 1;
+}
+
+.images {
+    grid-area: images;
+    max-width: var(--gallery-image-width);
+    aspect-ratio: 1;
+    overflow: hidden;
+    position: relative;
+}
+
+.images ul {
+    display: flex;
+    transition: transform 250ms cubic-bezier(.23,1,.32,1);
+    width: calc(100% * var(--image-count));
+    aspect-ratio: var(--image-count) / 1;
+}
+
+.images img {
+    width: 100%;
+    aspect-ratio: 1;
+}
+
+.images li {
+    position: relative;
+}
+
+.images label[for^="thumb-toggle"] {
+    position: absolute;
+    inset-block: 0;
+    opacity: 1;
+    padding-inline: 1.5rem;
+    display: grid;
+    place-items: center;
+    background: hsla(0 0% 100% / .2);
+    transition: opacity 300ms linear;
+    opacity: 0;
+    font-size: 3em;
+    color: hsla(0 0% 0% / .15);
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.images label[for^="thumb-toggle"]:hover {
+    opacity: 1;
+}
+
+.images label[for^="thumb-toggle"].prev {
+    inset-inline: 0 auto;
+}
+
+.images label[for^="thumb-toggle"].next {
+    inset-inline: auto 0;
+}
+
+.images label[for^="lightbox-toggle"] {
+    pointer-events: none;
+}
+
+#lightbox-toggle-0:checked ~ .img-list.lightbox {
+    --idx-checked: 0;
+}
+#thumb-toggle-1:checked ~ .img-list:not(.lightbox),
+#lightbox-toggle-1:checked ~ .img-list.lightbox {
+    --idx-checked: 1;
+}
+#thumb-toggle-2:checked ~ .img-list:not(.lightbox),
+#lightbox-toggle-2:checked ~ .img-list.lightbox {
+    --idx-checked: 2;
+}
+#thumb-toggle-3:checked ~ .img-list:not(.lightbox),
+#lightbox-toggle-3:checked ~ .img-list.lightbox {
+    --idx-checked: 3;
+}
+#thumb-toggle-4:checked ~ .img-list:not(.lightbox),
+#lightbox-toggle-4:checked ~ .img-list.lightbox {
+    --idx-checked: 4;
+}
+#thumb-toggle-5:checked ~ .img-list:not(.lightbox),
+#lightbox-toggle-5:checked ~ .img-list.lightbox {
+    --idx-checked: 5;
+}
+
+.thumbs li {
+    /* @see: https://css-tricks.com/using-absolute-value-sign-rounding-and-modulo-in-css-today/ */
+    /* calculate absolute value of difference between checked and thumb (equality === selected) */
+    --abs: max(var(--idx-thumb) - var(--idx-checked), var(--idx-checked) - var(--idx-thumb));
+    /* transform into zero or one */
+    --not-sel: min(1, var(--abs));
+    /* subtract it from 1, only zero will give us true */
+    --sel: calc(1 - var(--not-sel));
+    /* which ultimately tells us if we wannt to highlight the current item */
+    outline: calc(var(--sel) * 2px) solid black;
+    outline-offset: 1px;
+}
+
+.images ul {
+    transform: translateX(calc(100% / var(--image-count) * (var(--idx-checked) - 1) * -1));
+}
+
+.lightbox {
+    display: grid;
+    position: fixed;
+    inset: 0;
+    background: hsla(0 0% 0% / .5);
+    place-items: center;
+    transition: opacity 250ms linear;
+    opacity: 0;
+    transform: scale(0);
+}
+
+[id^="lightbox-toggle"]:not([id="lightbox-toggle-0"]):checked ~ .lightbox {
+    opacity: 1;
+    transform: scale(1);
+}
+
+.lightbox label[for="lightbox-toggle-0"] {
+    position: absolute;
+    inset: 1em 1em auto auto;
+    width: 2em;
+    aspect-ratio: 1;
+    color: white;
+    cursor: pointer;
+    background: hsla(0 100% 50% / .5);
+    display: grid;
+    place-items: center;
+}
+
+.lightbox-content {
+    width: var(--gallery-lightbox-width);
+    aspect-ratio: 16 / 9;
+    outline: 1em solid black;
+    overflow: hidden;
+    display: flex;
+}
+
+.lightbox ul {
+    display: flex;
+    transform: translateX(calc(var(--gallery-lightbox-width) * (var(--idx-checked) - 1) * -1));
+}
+
+.lightbox li {
+    width: var(--gallery-lightbox-width);
+    aspect-ratio: 16 / 9;
+}
+
+.lightbox img {
+    width: 100%;
+}
+
+@media (min-width: 40em) {
+    .gallery {
+        grid-template-areas: 'thumbs images';
+        grid-auto-columns: min-content 1fr;
+        --gallery-image-width: 22em;
+    }
+
+    .thumbs ul {
+        display: grid;
+    }
+
+    .images label[for^="lightbox-toggle"] {
+        pointer-events: revert;
+    }
+}

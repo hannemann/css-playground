@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="/css/default.css">
+    <link rel="stylesheet" href="/css/gallery.css">
+</head>
+<body>
+    <h2><a href="/index.html">Gallery</a></h2>
+    <main>
+        <div class="gallery">
+            <input type="radio" name="thumb-toggle" id="thumb-toggle-1" checked="checked">
+            <input type="radio" name="thumb-toggle" id="thumb-toggle-2">
+            <input type="radio" name="thumb-toggle" id="thumb-toggle-3">
+            <input type="radio" name="thumb-toggle" id="thumb-toggle-4">
+            <input type="radio" name="thumb-toggle" id="thumb-toggle-5">
+            <input type="radio" name="lightbox-toggle" id="lightbox-toggle-0">
+            <input type="radio" name="lightbox-toggle" id="lightbox-toggle-1">
+            <input type="radio" name="lightbox-toggle" id="lightbox-toggle-2">
+            <input type="radio" name="lightbox-toggle" id="lightbox-toggle-3">
+            <input type="radio" name="lightbox-toggle" id="lightbox-toggle-4">
+            <input type="radio" name="lightbox-toggle" id="lightbox-toggle-5">
+            <div class="img-list thumbs">
+                <ul>
+                    <li style="--idx-thumb: 1;"><label for="thumb-toggle-1" class="thumb"><img src="https://picsum.photos/id/1041/900/900" alt=""></label></li>
+                    <li style="--idx-thumb: 2;"><label for="thumb-toggle-2" class="thumb"><img src="https://picsum.photos/id/1002/900/900" alt=""></label></li>
+                    <li style="--idx-thumb: 3;"><label for="thumb-toggle-3" class="thumb"><img src="https://picsum.photos/id/1016/900/900" alt=""></label></li>
+                    <li style="--idx-thumb: 4;"><label for="thumb-toggle-4" class="thumb"><img src="https://picsum.photos/id/102/900/900" alt=""></label></li>
+                    <li style="--idx-thumb: 5;"><label for="thumb-toggle-5" class="thumb"><img src="https://picsum.photos/id/1022/900/900" alt=""></label></li>
+                </ul>
+            </div>
+            <div class="img-list images" style="--image-count: 5">
+                <ul>
+                    <li>
+                        <label for="lightbox-toggle-1"><img src="https://picsum.photos/id/1041/900/900" alt=""></label>
+                        <label class="next" for="thumb-toggle-2">&#x25B6;</label>
+                    </li>
+                    <li>
+                        <label for="lightbox-toggle-2"><img src="https://picsum.photos/id/1002/900/900" alt=""></label>
+                        <label class="prev" for="thumb-toggle-1">&#x25C0;</label>
+                        <label class="next" for="thumb-toggle-3">&#x25B6;</label>
+                    </li>
+                    <li>
+                        <label for="lightbox-toggle-3"><img src="https://picsum.photos/id/1016/900/900" alt=""></label>
+                        <label class="prev" for="thumb-toggle-2">&#x25C0;</label>
+                        <label class="next" for="thumb-toggle-4">&#x25B6;</label>
+                    </li>
+                    <li>
+                        <label for="lightbox-toggle-4"><img src="https://picsum.photos/id/102/900/900" alt=""></label>
+                        <label class="prev" for="thumb-toggle-3">&#x25C0;</label>
+                        <label class="next" for="thumb-toggle-5">&#x25B6;</label>
+                    </li>
+                    <li>
+                        <label for="lightbox-toggle-5"><img src="https://picsum.photos/id/1022/900/900" alt=""></label>
+                        <label class="prev" for="thumb-toggle-4">&#x25C0;</label>
+                    </li>
+                </ul>
+            </div>
+            <div class="img-list lightbox">
+                <div class="lightbox-content">
+                    <ul>
+                        <li><img src="https://picsum.photos/id/1041/1280/720" alt=""></li>
+                        <li><img src="https://picsum.photos/id/1002/1280/720" alt=""></li>
+                        <li><img src="https://picsum.photos/id/1016/1280/720" alt=""></li>
+                        <li><img src="https://picsum.photos/id/102/1280/720" alt=""></li>
+                        <li><img src="https://picsum.photos/id/1022/1280/720" alt=""></li>
+                    </ul>
+                    <label for="lightbox-toggle-0">&times;</label>
+                </div>
+            </div>
+        </div>
+    </main>
+</body>
+</html>

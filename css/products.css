@@ -1,0 +1,29 @@
+main {
+    display: grid;
+    gap: 1rem;
+}
+
+article.product {
+    background: red;
+    border-radius: 1rem;
+    aspect-ratio: 3 / 4;
+    padding: 0;
+}
+
+@media (min-width: 30em) {
+    main {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (min-width: 40em) {
+    main {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (min-width: 64em) {
+    main {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
