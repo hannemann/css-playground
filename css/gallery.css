@@ -142,11 +142,6 @@
     transform: scale(0);
 }
 
-[id^="lightbox-toggle"]:not([id="lightbox-toggle-0"]):checked ~ .lightbox {
-    opacity: 1;
-    transform: scale(1);
-}
-
 .lightbox label[for="lightbox-toggle-0"] {
     position: absolute;
     inset: 1em 1em auto auto;
@@ -181,7 +176,7 @@
     width: 100%;
 }
 
-@media (min-width: 40em) {
+@media (min-width: 38em) {
     .gallery {
         grid-template-areas: 'thumbs images';
         grid-auto-columns: min-content 1fr;
@@ -195,4 +190,15 @@
     .images label[for^="lightbox-toggle"] {
         pointer-events: revert;
     }
+
+    [id^="lightbox-toggle"]:not([id="lightbox-toggle-0"]):checked ~ .lightbox {
+        opacity: 1;
+        transform: scale(1);
+    }
 }
+
+/*
+
+TODO: implement scroll snap which is buggy in Chrome
+
+*/

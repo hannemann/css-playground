@@ -15,7 +15,7 @@ h2 {
     margin-bottom: 1em;
 }
 
-@media (min-width: 40em) {
+@media (min-width: 38em) {
 
     body {
         padding-inline: 1rem;
