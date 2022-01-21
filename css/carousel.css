@@ -1,0 +1,50 @@
+main {
+    margin: 0 auto;
+    width: 600px;
+}
+
+.carousel {
+    aspect-ratio: 600 / 360;
+    position: relative;
+    --move: 1;
+    --duration: 250ms;
+    overflow: hidden;
+}
+
+.carousel > * {
+    grid-row: 1;
+    width: 100%;
+    transition: all var(--duration) ease-in-out;
+    position: absolute;
+}
+
+.carousel > *:not(.prev):not(.cur):not(.next) {
+    display: none;
+}
+
+.carousel .prev {
+    transform: translateX(calc(var(--move) * -100%));
+}
+.carousel .cur {
+    transform: translateX(0);
+}
+.carousel .next {
+    transform: translateX(calc(var(--move) * 100%));
+}
+
+.carousel-controls {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1em;
+}
+
+.carousel-controls span {
+    user-select: none;
+    cursor: pointer;
+    transition: opacity 50ms linear;
+}
+
+.carousel-controls.moving span {
+    pointer-events: none;
+    opacity: .5;
+}
