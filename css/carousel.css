@@ -8,13 +8,14 @@ main {
     position: relative;
     --move: 1;
     --duration: 250ms;
+    --timing-function: ease-in-out;
     overflow: hidden;
 }
 
 .carousel > * {
     grid-row: 1;
     width: 100%;
-    transition: all var(--duration) ease-in-out;
+    transition: all var(--duration) var(--timing-function);
     position: absolute;
 }
 
