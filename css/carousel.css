@@ -4,7 +4,7 @@ main {
 }
 
 .carousel {
-    aspect-ratio: 600 / 360;
+    aspect-ratio: 16 / 9;
     position: relative;
     --move: 1;
     --duration: 250ms;
@@ -41,10 +41,8 @@ main {
 .carousel-controls span {
     user-select: none;
     cursor: pointer;
-    transition: opacity 50ms linear;
 }
 
 .carousel-controls.moving span {
     pointer-events: none;
-    opacity: .5;
 }
