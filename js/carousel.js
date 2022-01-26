@@ -3,6 +3,7 @@ const SELECTORS = {
   slides: ":scope > *",
   btnBack: ":scope > span:first-of-type",
   btnFwd: ":scope > span:last-of-type",
+  btnGoto: ":scope > span.goto",
 };
 
 const CLASSNAMES = {
@@ -73,6 +74,48 @@ class Carousel {
     this.move();
   }
 
+  /**
+   * @param {Number} n goto slide with index of n
+   */
+  goto(n) {
+    if (n !== this.cur) {
+      this.dir = n > this.cur ? DIRECTIONS.fwd : DIRECTIONS.back;
+      this.oldDuration = this.duration;
+      this.oldTimingFunction = this.timingFuntion;
+      this.duration = 60;
+      this.timingFuntion = "linear";
+      this.moveRecursive(n);
+    }
+  }
+
+  /**
+   * @param {Number} n goto slide with index of n
+   */
+  moveRecursive(n) {
+    const next = this.dir === DIRECTIONS.fwd ? this.cur + 1 : this.cur - 1;
+    if (next !== n) {
+      this.slides[this.cur].addEventListener(
+        "transitionend",
+        () => {
+          requestAnimationFrame(() => this.moveRecursive(n));
+        },
+        { once: true }
+      );
+    } else {
+      this.slides[this.cur].addEventListener(
+        "transitionend",
+        () => {
+          this.timingFuntion = this.oldTimingFunction;
+        },
+        { once: true }
+      );
+      // last slide is next one
+      this.timingFuntion = "ease-out";
+      this.duration = this.oldDuration;
+    }
+    this.move();
+  }
+
   move() {
     this.prepare().setCur().setNext().setPrev().apply();
   }
@@ -91,7 +134,7 @@ class Carousel {
     this.slides[this.next].classList.add(CLASSNAMES.next);
   }
 
-  setCur(n) {
+  setCur() {
     if (this.dir === DIRECTIONS.fwd) {
       this.cur = this.cur + 1 > this.max ? 0 : this.cur + 1;
     } else {
@@ -118,14 +161,23 @@ class Carousel {
     return this;
   }
 
+  /**
+   * @param {Number} d 1: fwd, -1: back
+   */
   set dir(d) {
     this.el.style.setProperty("--move", d);
   }
 
+  /**
+   * @returns {Number}
+   */
   get dir() {
     return parseInt(this.el.style.getPropertyValue("--move"));
   }
 
+  /**
+   * @param {Boolean} m
+   */
   set moving(m) {
     if (m) {
       this.slides[this.cur].addEventListener(
@@ -138,6 +190,9 @@ class Carousel {
     this.controls.el.classList.toggle(CLASSNAMES.moving, m);
   }
 
+  /**
+   * @returns {Boolean}
+   */
   get moving() {
     return this.el.classList.contains(CLASSNAMES.moving);
   }
@@ -173,8 +228,13 @@ class CarouselControls {
     this.el
       .querySelector(SELECTORS.btnFwd)
       .addEventListener("click", () => this.carousel.fwd());
+    this.el.querySelectorAll(SELECTORS.btnGoto).forEach((b) => {
+      b.addEventListener("click", (e) => {
+        this.carousel.el.dataset.current = b.dataset.slide;
+      });
+    });
     return this;
   }
 }
 
-new Carousel(document.querySelector(".carousel"), CarouselControls);
+c = new Carousel(document.querySelector(".carousel"), CarouselControls);
