@@ -9,13 +9,14 @@ main {
     --move: 1;
     --duration: 250ms;
     --timing-function: ease-in-out;
+    --transition-property: all;
     overflow: hidden;
 }
 
 .carousel > * {
     grid-row: 1;
     width: 100%;
-    transition: all var(--duration) var(--timing-function);
+    transition: var(--transition-property) var(--duration) var(--timing-function);
     position: absolute;
 }
 
