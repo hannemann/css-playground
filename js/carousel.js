@@ -105,9 +105,11 @@ class Carousel {
     if (this.pointerStart) {
       e.preventDefault();
       const delta = e.pageX - this.pointerStart;
-      this.dir = delta > 0 ? DIRECTIONS.back : DIRECTIONS.fwd;
-      this.setPrev().setNext();
-      this.pxOffset = delta;
+      if (Math.abs(delta) > 0) {
+        this.dir = delta > 0 ? DIRECTIONS.back : DIRECTIONS.fwd;
+        this.setPrev().setNext();
+        this.pxOffset = delta;
+      }
     }
   }
 
@@ -119,13 +121,15 @@ class Carousel {
   pointerUp(e) {
     e.preventDefault();
     this.transition = true;
-    this.slides[this.prev].style.transform = "";
-    this.slides[this.cur].style.transform = "";
-    this.slides[this.next].style.transform = "";
-    if (e.pageX - this.pointerStart > 0) {
-      this.back();
-    } else {
-      this.fwd();
+    if (this.slides[this.cur].style.transform !== "") {
+      this.slides[this.prev].style.transform = "";
+      this.slides[this.cur].style.transform = "";
+      this.slides[this.next].style.transform = "";
+      if (e.pageX - this.pointerStart > 0) {
+        this.back();
+      } else {
+        this.fwd();
+      }
     }
     this.pointerStart = null;
   }
