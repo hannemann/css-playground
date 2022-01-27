@@ -203,6 +203,7 @@ class Carousel {
    * @private
    */
   move() {
+    this.moving = true;
     this.setCur().setNext().setPrev();
   }
 
@@ -255,6 +256,71 @@ class Carousel {
   }
 
   /**
+   * dispatch transition change event
+   * @param {Number} offset
+   */
+  dispatchTransitionChange() {
+    this.el.dispatchEvent(
+      new CustomEvent("slider-transitionchange", {
+        detail: this.eventData,
+      })
+    );
+  }
+
+  /**
+   * dispatch transition end event
+   * @param {Number} offset
+   */
+  dispatchTransitionEnd() {
+    this.el.dispatchEvent(
+      new CustomEvent("slider-transitionend", {
+        detail: this.eventData,
+      })
+    );
+  }
+
+  /**
+   * dispatch offset change event
+   * @param {Number} offset
+   */
+  dispatchOffsetChange(offset) {
+    this.el.dispatchEvent(
+      new CustomEvent("slider-offsetchange", {
+        detail: Object.assign(this.eventData, { offset }),
+      })
+    );
+  }
+
+  /**
+   * @typedef {Object} SliderEventData
+   * @property {Number} prev
+   * @property {Number} cur
+   * @property {Number} next
+   * @property {Number} dir
+   * @property {Number} offset
+   * @property {Number} transitionduration
+   * @property {String} transitionTimingFunction
+   * @property {String} transitionProperty
+   *
+   * obtain event details object
+   * @returns {SliderEventData}
+   */
+  get eventData() {
+    return {
+      prev: this.prev,
+      cur: this.cur,
+      next: this.next,
+      dir: this.dir,
+      offset: 0,
+      transitionduration: this.duration,
+      transitionTimingFunction: this.timingFunction,
+      transitionProperty: this.el.style.getPropertyValue(
+        "--transition-property"
+      ),
+    };
+  }
+
+  /**
    * @param {Number} d 1: fwd, -1: back
    * @private
    */
@@ -278,7 +344,10 @@ class Carousel {
     if (m) {
       this.slides[this.cur].addEventListener(
         "transitionend",
-        () => (this.moving = false),
+        () => {
+          this.moving = false;
+          this.dispatchTransitionEnd();
+        },
         { once: true }
       );
     }
@@ -300,6 +369,7 @@ class Carousel {
    */
   set duration(d) {
     this.el.style.setProperty("--duration", `${parseInt(d, 10)}ms`);
+    this.dispatchTransitionChange();
   }
 
   /**
@@ -316,6 +386,7 @@ class Carousel {
    */
   set timingFunction(fn) {
     this.el.style.setProperty("--timing-function", fn);
+    this.dispatchTransitionChange();
   }
 
   /**
@@ -333,6 +404,7 @@ class Carousel {
   set transition(t) {
     t = typeof t === "boolean" && t;
     this.el.style.setProperty("--transition-property", t ? "" : "none");
+    this.dispatchTransitionChange();
   }
 
   /**
@@ -359,6 +431,7 @@ class Carousel {
     this.slides[
       this.next
     ].style.transform = `translateX(calc(${offsetNext}% + (${px}px)))`;
+    this.dispatchOffsetChange(px);
   }
 }
 
@@ -367,6 +440,10 @@ class CarouselControls {
     this.el = document.querySelector(SELECTORS.controls);
     this.carousel = carousel;
     this.initListeners();
+
+    // this.carousel.el.addEventListener("slider-offsetchange", console.log);
+    // this.carousel.el.addEventListener("slider-transitionchange", console.log);
+    // this.carousel.el.addEventListener("slider-transitionend", console.log);
   }
 
   initListeners() {
