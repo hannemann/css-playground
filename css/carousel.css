@@ -2,15 +2,15 @@
     margin: 0 auto;
     width: 600px;
     max-width: 100%;
+    --move: 1;
+    --duration: 250ms;
+    --timing-function: ease-in-out;
+    --transition-property: all;
 }
 
 .slides {
     aspect-ratio: 16 / 9;
     position: relative;
-    --move: 1;
-    --duration: 250ms;
-    --timing-function: ease-in-out;
-    --transition-property: all;
     overflow: hidden;
 }
 

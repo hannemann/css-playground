@@ -76,12 +76,12 @@ class Carousel {
     this.observer = new MutationObserver((mutations) => {
       mutations.forEach((m) => {
         if (m.attributeName === "data-current") {
-          this.goto(parseInt(this.slider.dataset.current, 10));
+          this.goto(parseInt(this.el.dataset.current, 10));
         }
       });
     });
 
-    this.observer.observe(this.slider, { attributes: true });
+    this.observer.observe(this.el, { attributes: true });
     return this;
   }
 
@@ -314,7 +314,7 @@ class Carousel {
       offset: 0,
       transitionduration: this.duration,
       transitionTimingFunction: this.timingFunction,
-      transitionProperty: this.slider.style.getPropertyValue(
+      transitionProperty: this.el.style.getPropertyValue(
         "--transition-property"
       ),
     };
@@ -367,7 +367,7 @@ class Carousel {
    * @private
    */
   set dir(d) {
-    this.slider.style.setProperty("--move", d);
+    this.el.style.setProperty("--move", d);
   }
 
   /**
@@ -375,7 +375,7 @@ class Carousel {
    * @private
    */
   get dir() {
-    return parseInt(this.slider.style.getPropertyValue("--move"));
+    return parseInt(this.el.style.getPropertyValue("--move"));
   }
 
   /**
@@ -409,7 +409,7 @@ class Carousel {
    * @private
    */
   set duration(d) {
-    this.slider.style.setProperty("--duration", `${parseInt(d, 10)}ms`);
+    this.el.style.setProperty("--duration", `${parseInt(d, 10)}ms`);
     this.dispatchTransitionChange();
   }
 
@@ -418,7 +418,7 @@ class Carousel {
    * @private
    */
   get duration() {
-    return parseInt(this.slider.style.getPropertyValue("--duration"), 10);
+    return parseInt(this.el.style.getPropertyValue("--duration"), 10);
   }
 
   /**
@@ -426,7 +426,7 @@ class Carousel {
    * @private
    */
   set timingFunction(fn) {
-    this.slider.style.setProperty("--timing-function", fn);
+    this.el.style.setProperty("--timing-function", fn);
     this.dispatchTransitionChange();
   }
 
@@ -435,7 +435,7 @@ class Carousel {
    * @private
    */
   get timingFunction() {
-    return this.slider.style.getPropertyValue("--timing-function");
+    return this.el.style.getPropertyValue("--timing-function");
   }
 
   /**
@@ -444,7 +444,7 @@ class Carousel {
    */
   set transition(t) {
     t = typeof t === "boolean" && t;
-    this.slider.style.setProperty("--transition-property", t ? "" : "none");
+    this.el.style.setProperty("--transition-property", t ? "" : "none");
     this.dispatchTransitionChange();
   }
 
@@ -454,7 +454,7 @@ class Carousel {
    */
   get transition() {
     return (
-      this.slider.style.getPropertyValue("--transition-property") !== "none"
+      this.el.style.getPropertyValue("--transition-property") !== "none"
     );
   }
 
