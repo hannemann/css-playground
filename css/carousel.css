@@ -34,30 +34,3 @@
 .slides .next {
     transform: translateX(calc(var(--move) * 100%));
 }
-
-.carousel-controls {
-    display: flex;
-    justify-content: flex-end;
-    gap: 1em;
-    position: relative;
-    --indicator-pos: 
-}
-
-.carousel-controls span {
-    user-select: none;
-    cursor: pointer;
-}
-
-.carousel-controls.moving span {
-    pointer-events: none;
-}
-
-.carousel-controls .cur {
-    background: black;
-    color: white;
-}
-
-.carousel-controls::after {
-    content: '';
-
-}

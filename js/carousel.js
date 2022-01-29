@@ -27,6 +27,7 @@ class Carousel {
     this.timingFunction = this.defaultTimingFunction = options.timingFunction;
     this.initSlides();
     if (this.slides.length > 1) {
+      this.dir = DIRECTIONS.fwd;
       this.initPointer().initObserver();
     }
   }
@@ -38,6 +39,8 @@ class Carousel {
    */
   initSlides() {
     this.slides = Array.from(this.el.querySelectorAll(SELECTORS.slides));
+    this.max = this.slides.length - 1;
+    this.el.style.setProperty("--item-count", this.slides.length);
     this.prev = this.slides.findIndex((s) =>
       s.classList.contains(CLASSNAMES.prev)
     );
@@ -47,7 +50,6 @@ class Carousel {
     this.next = this.slides.findIndex((s) =>
       s.classList.contains(CLASSNAMES.next)
     );
-    this.max = this.slides.length - 1;
     return this;
   }
 
@@ -319,6 +321,48 @@ class Carousel {
   }
 
   /**
+   * @returns {Number}
+   */
+  get prev() {
+    return parseInt(this.el.style.getPropertyValue("--previous"));
+  }
+
+  /**
+   * @param {Number} c
+   */
+  set prev(c) {
+    this.el.style.setProperty("--previous", c);
+  }
+
+  /**
+   * @returns {Number}
+   */
+  get cur() {
+    return parseInt(this.el.style.getPropertyValue("--current"));
+  }
+
+  /**
+   * @param {Number} c
+   */
+  set cur(c) {
+    this.el.style.setProperty("--current", c);
+  }
+
+  /**
+   * @returns {Number}
+   */
+  get next() {
+    return parseInt(this.el.style.getPropertyValue("--next"));
+  }
+
+  /**
+   * @param {Number} c
+   */
+  set next(c) {
+    this.el.style.setProperty("--next", c);
+  }
+
+  /**
    * @param {Number} d 1: fwd, -1: back
    * @private
    */
@@ -349,7 +393,7 @@ class Carousel {
         { once: true }
       );
     }
-    this.slider.classList.toggle(CLASSNAMES.moving, m);
+    this.el.classList.toggle(CLASSNAMES.moving, m);
   }
 
   /**
@@ -357,7 +401,7 @@ class Carousel {
    * @private
    */
   get moving() {
-    return this.slider.classList.contains(CLASSNAMES.moving);
+    return this.el.classList.contains(CLASSNAMES.moving);
   }
 
   /**
@@ -442,12 +486,12 @@ class CarouselControls {
 
     // this.carousel.el.addEventListener("slider-offsetchange", console.log);
     // this.carousel.el.addEventListener("slider-transitionchange", console.log);
-    this.carousel.el.addEventListener("slider-transitionend", (e) => {
-      this.el.querySelector(".cur").classList.remove("cur");
-      this.el
-        .querySelector(`[data-slide="${e.detail.cur}"]`)
-        .classList.add("cur");
-    });
+    // this.carousel.el.addEventListener("slider-transitionend", (e) => {
+    //   this.el.querySelector(".cur").classList.remove("cur");
+    //   this.el
+    //     .querySelector(`[data-slide="${e.detail.cur}"]`)
+    //     .classList.add("cur");
+    // });
   }
 
   initListeners() {

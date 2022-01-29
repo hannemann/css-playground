@@ -1,0 +1,26 @@
+.carousel-controls {
+    display: flex;
+    justify-content: flex-end;
+    gap: var(--gap);
+    position: relative;
+    --gap: .2em;
+    --item-width: 2ch;
+    --indicator-pos: calc((var(--item-count) - var(--current)) * (var(--item-width) + var(--gap)));
+}
+
+.carousel-controls span {
+    user-select: none;
+    cursor: pointer;
+    flex: 0 0 var(--item-width);
+    text-align: center;
+}
+
+.carousel-controls::after {
+    position:absolute;
+    right: var(--indicator-pos);
+    content: '';
+    height: 100%;
+    width: var(--item-width);
+    border-bottom: 2px solid black;
+    transition: all 250ms linear;
+}
