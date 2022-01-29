@@ -11,8 +11,8 @@
 </head>
 <body>
     <h2><a href="/index.html">Carousel</a></h2>
-    <main>
-        <div class="carousel" data-current="0">
+    <main class="carousel">
+        <div class="slides" data-current="0">
             <img src="https://picsum.photos/id/1002/640/360" class="cur" alt="">
             <img src="https://picsum.photos/id/1003/640/360" class="next" alt="">
             <img src="https://picsum.photos/id/1004/640/360" alt="">
@@ -23,7 +23,7 @@
         </div>
         <div class="carousel-controls">
             <span class="back"><-</span>
-            <span class="goto" data-slide="0">1</span>
+            <span class="goto cur" data-slide="0">1</span>
             <span class="goto" data-slide="1">2</span>
             <span class="goto" data-slide="2">3</span>
             <span class="goto" data-slide="3">4</span>

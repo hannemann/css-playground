@@ -1,9 +1,10 @@
-main {
+.carousel {
     margin: 0 auto;
     width: 600px;
+    max-width: 100%;
 }
 
-.carousel {
+.slides {
     aspect-ratio: 16 / 9;
     position: relative;
     --move: 1;
@@ -13,24 +14,24 @@ main {
     overflow: hidden;
 }
 
-.carousel > * {
+.slides > * {
     grid-row: 1;
     width: 100%;
     transition: var(--transition-property) var(--duration) var(--timing-function);
     position: absolute;
 }
 
-.carousel > *:not(.prev):not(.cur):not(.next) {
+.slides > *:not(.prev):not(.cur):not(.next) {
     display: none;
 }
 
-.carousel .prev {
+.slides .prev {
     transform: translateX(calc(var(--move) * -100%));
 }
-.carousel .cur {
+.slides .cur {
     transform: translateX(0);
 }
-.carousel .next {
+.slides .next {
     transform: translateX(calc(var(--move) * 100%));
 }
 
@@ -38,6 +39,8 @@ main {
     display: flex;
     justify-content: flex-end;
     gap: 1em;
+    position: relative;
+    --indicator-pos: 
 }
 
 .carousel-controls span {
@@ -47,4 +50,14 @@ main {
 
 .carousel-controls.moving span {
     pointer-events: none;
+}
+
+.carousel-controls .cur {
+    background: black;
+    color: white;
+}
+
+.carousel-controls::after {
+    content: '';
+
 }
