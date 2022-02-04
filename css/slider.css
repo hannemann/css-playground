@@ -1,0 +1,34 @@
+.wrapper {
+    width: 1200px;
+    margin-inline: auto;
+    aspect-ratio: 32 / 9;
+    overflow: hidden;
+}
+
+.slider {
+    width: 600px;
+    aspect-ratio: 16 / 9;
+    --current: 0;
+}
+
+.slides {
+    display: grid;
+    grid-auto-columns: 100%;
+    width: 100%;
+    height: 100%;
+    transform: translateX(calc(-1 * var(--current) * 100%));
+    transition: transform 250ms ease-in-out;
+}
+
+.slides > * {
+    grid-row: 1;
+    width: 100%;
+    height: 100%;
+}
+
+.buttons {
+    margin-inline: auto;
+    width: 600px;
+    display: flex;
+    justify-content: flex-end;
+}
