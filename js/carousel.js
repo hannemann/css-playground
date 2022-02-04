@@ -41,15 +41,12 @@ class Carousel {
     this.slides = Array.from(this.el.querySelectorAll(SELECTORS.slides));
     this.max = this.slides.length - 1;
     this.el.style.setProperty("--item-count", this.slides.length);
-    this.prev = this.slides.findIndex((s) =>
-      s.classList.contains(CLASSNAMES.prev)
-    );
-    this.cur = this.slides.findIndex((s) =>
-      s.classList.contains(CLASSNAMES.cur)
-    );
-    this.next = this.slides.findIndex((s) =>
-      s.classList.contains(CLASSNAMES.next)
-    );
+    this.prev = this.max;
+    this.cur = 0;
+    this.next = 1;
+    this.slides[this.prev].classList.add(CLASSNAMES.prev);
+    this.slides[this.cur].classList.add(CLASSNAMES.cur);
+    this.max > 1 && this.slides[this.next].classList.add(CLASSNAMES.next);
     return this;
   }
 
@@ -204,7 +201,18 @@ class Carousel {
    */
   move() {
     this.moving = true;
-    this.setCur().setNext().setPrev();
+    if (this.max === 1) {
+      this.transition = false;
+      requestAnimationFrame(() => {
+        this.slides[this.next].classList.remove(CLASSNAMES.next);
+        requestAnimationFrame(() => {
+          this.transition = true;
+          this.setCur().setNext().setPrev();
+        });
+      });
+    } else {
+      this.setCur().setNext().setPrev();
+    }
   }
 
   /**
@@ -387,8 +395,20 @@ class Carousel {
       this.slides[this.cur].addEventListener(
         "transitionend",
         () => {
-          this.moving = false;
-          this.dispatchTransitionEnd();
+          if (this.max === 1) {
+            this.transition = false;
+            requestAnimationFrame(() => {
+              this.slides[this.next].classList.remove(CLASSNAMES.next);
+              requestAnimationFrame(() => {
+                this.transition = true;
+                this.moving = false;
+                this.dispatchTransitionEnd();
+              });
+            });
+          } else {
+            this.moving = false;
+            this.dispatchTransitionEnd();
+          }
         },
         { once: true }
       );
@@ -453,9 +473,7 @@ class Carousel {
    * @private
    */
   get transition() {
-    return (
-      this.el.style.getPropertyValue("--transition-property") !== "none"
-    );
+    return this.el.style.getPropertyValue("--transition-property") !== "none";
   }
 
   /**
@@ -509,6 +527,10 @@ class CarouselControls {
     return this;
   }
 }
+
+document
+  .querySelectorAll(".slides > *")
+  .forEach((s) => s.addEventListener("click", console.log));
 
 s = new Carousel(document.querySelector(".carousel"));
 c = new CarouselControls(s);

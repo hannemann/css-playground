@@ -12,6 +12,7 @@
     aspect-ratio: 16 / 9;
     position: relative;
     overflow: hidden;
+    z-index: 0;
 }
 
 .slides > * {
@@ -30,6 +31,7 @@
 }
 .slides .cur {
     transform: translateX(0);
+    z-index: 1;
 }
 .slides .next {
     transform: translateX(calc(var(--move) * 100%));
