@@ -36,3 +36,8 @@
 .slides .next {
     transform: translateX(calc(var(--move) * 100%));
 }
+
+.carousel.moving .slides .prev,
+.carousel.moving .slides .cur {
+  z-index: 4;
+}

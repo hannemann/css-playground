@@ -116,19 +116,47 @@ class Carousel {
    * @private
    */
   pointerUp(e) {
-    e.preventDefault();
-    this.transition = true;
-    if (this.slides[this.cur].style.transform !== "") {
+      e.preventDefault();
+      this.transition = true;
+      if (this.slides[this.cur].style.transform !== "") {
+
+          if (e.pageX - this.pointerStart > 0) {
+              this.dir = DIRECTIONS.back;
+          } else {
+              this.dir = DIRECTIONS.fwd;
+          }
+
+          if (this.max === 1) {
+              this.transition = false;
+              requestAnimationFrame(() => {
+                  this.slides[this.next].classList.remove(CLASSNAMES.next);
+                  requestAnimationFrame(() => {
+                      this.transition = true;
+                      this.finalizeMovement(e);
+                  });
+              });
+
+          } else {
+              this.finalizeMovement(e);
+          }
+
+      }
+      this.pointerStart = null;
+  }
+
+  /**
+   * move slides to final position
+   * @param {PointerEvent} e
+   */
+  finalizeMovement(e) {
+      this.moving = true;
       this.slides[this.prev].style.transform = "";
       this.slides[this.cur].style.transform = "";
       this.slides[this.next].style.transform = "";
-      if (e.pageX - this.pointerStart > 0) {
-        this.back();
-      } else {
-        this.fwd();
-      }
-    }
-    this.pointerStart = null;
+      this.setCur();
+      this.max > 1 && this.setNext();
+      this.setPrev();
+      this.dispatchTransitionStart();
   }
 
   /**
@@ -273,6 +301,17 @@ class Carousel {
         detail: this.eventData,
       })
     );
+  }
+
+  /**
+   * dispatch transition start event
+   */
+  dispatchTransitionStart() {
+      this.el.dispatchEvent(
+          new CustomEvent("slider-transitionstart", {
+              detail: this.eventData,
+          })
+      );
   }
 
   /**
@@ -527,10 +566,6 @@ class CarouselControls {
     return this;
   }
 }
-
-document
-  .querySelectorAll(".slides > *")
-  .forEach((s) => s.addEventListener("click", console.log));
 
 s = new Carousel(document.querySelector(".carousel"));
 c = new CarouselControls(s);
