@@ -623,7 +623,8 @@ class Carousel {
               this.startAutoSlide();
           }
       } else {
-          this.stopAutoSlide();
+        delete this.el.dataset.autoInterval;
+        this.stopAutoSlide();
       }
   }
 }
