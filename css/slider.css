@@ -1,7 +1,7 @@
 .wrapper {
-    width: 1200px;
+    width: 600px;
     margin-inline: auto;
-    aspect-ratio: 32 / 9;
+    aspect-ratio: 16 / 9;
     overflow: hidden;
 }
 
@@ -14,6 +14,7 @@
 .slides {
     display: grid;
     grid-auto-columns: 100%;
+    grid-auto-flow: column;
     width: 100%;
     height: 100%;
     transform: translateX(calc(-1 * var(--current) * 100%));
@@ -21,7 +22,6 @@
 }
 
 .slides > * {
-    grid-row: 1;
     width: 100%;
     height: 100%;
 }
