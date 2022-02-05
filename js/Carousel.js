@@ -28,7 +28,7 @@ const DIRECTIONS = {
  * data-auto-timing-function
  *  string sets the transition timing function of auto movemenet
  * data-auto-on-hover
- *  dont stop auto movement on hover
+ *  don't stop auto movement on hover
  */
 class Carousel {
   constructor(el, options = { timingFunction: "ease-in-out", duration: 250 }) {
@@ -40,7 +40,7 @@ class Carousel {
     this.initSlides();
     if (this.slides.length > 1) {
       this.dir = DIRECTIONS.fwd;
-      this.initPointer().initObserver().initAutoSlide();
+      this.initPointer().initObserver();
     }
   }
 
@@ -88,30 +88,10 @@ class Carousel {
         if (m.attributeName === "data-current") {
           this.goto(parseInt(this.el.dataset.current, 10));
         }
-        if (m.attributeName === "data-auto-interval") {
-          this.autoInterval = parseInt(this.el.dataset.autoInterval);
-        }
       });
     });
 
     this.observer.observe(this.el, { attributes: true });
-    return this;
-  }
-
-  /**
-   * initialize auto slide
-   */
-  initAutoSlide() {
-    if (this.autoInterval) {
-      this.el.addEventListener(
-        "slider-transitionbefore",
-        this.stopAutoSlide.bind(this)
-      );
-      this.el.addEventListener("slider-transitionend", () => {
-        (!this._hover || this.el.dataset.autoOnHover) && this.startAutoSlide();
-      });
-      this.startAutoSlide();
-    }
     return this;
   }
 
@@ -121,10 +101,7 @@ class Carousel {
    * @private
    */
   pointerEnter(e) {
-    this._hover = true;
-    if (!this.el.dataset.autoOnHover) {
-      this.stopAutoSlide();
-    }
+    this.dispatchSliderEnter();
   }
 
   /**
@@ -133,11 +110,8 @@ class Carousel {
    * @private
    */
   pointerLeave(e) {
-    if (!this.el.dataset.autoOnHover) {
-      this.startAutoSlide();
-    }
+    this.dispatchSliderLeave();
     this.pointerUp(e);
-    delete this._hover;
   }
 
   /**
@@ -288,48 +262,6 @@ class Carousel {
   }
 
   /**
-   * start auto sliding
-   * @private
-   */
-  startAutoSlide() {
-    if (this.autoInterval) {
-      this._autoSlideInterval = setTimeout(() => {
-        if (!this.moving) {
-          const duration = parseInt(this.el.dataset.autoDuration);
-          const timingFunction = this.el.dataset.autoTimingFunction;
-          if (typeof duration === "number") {
-            this.duration = duration;
-          }
-          if (timingFunction) {
-            this.timingFunction = timingFunction;
-          }
-          this.dir = DIRECTIONS.fwd;
-          this.move();
-          this.slides[this.cur].addEventListener(
-            "transitionend",
-            () => {
-              this.duration = this.defaultDuration;
-              this.timingFunction = this.defaultTimingFunction;
-            },
-            { once: true }
-          );
-        }
-      }, this.autoInterval);
-    }
-  }
-
-  /**
-   * stop auto sliding
-   * @private
-   */
-  stopAutoSlide() {
-    if (typeof this._autoSlideInterval !== "undefined") {
-      clearTimeout(this._autoSlideInterval);
-      delete this._autoSlideInterval;
-    }
-  }
-
-  /**
    * determine the cur slide
    * @returns {Carousel}
    * @private
@@ -383,6 +315,28 @@ class Carousel {
   dispatchTransitionChange() {
     this.el.dispatchEvent(
       new CustomEvent("slider-transitionchange", {
+        detail: this.eventData,
+      })
+    );
+  }
+
+  /**
+   * dispatch pointer enter event
+   */
+  dispatchSliderEnter() {
+    this.el.dispatchEvent(
+      new CustomEvent("slider-pointerenter", {
+        detail: this.eventData,
+      })
+    );
+  }
+
+  /**
+   * dispatch pointer leave event
+   */
+  dispatchSliderLeave() {
+    this.el.dispatchEvent(
+      new CustomEvent("slider-pointerleave", {
         detail: this.eventData,
       })
     );
@@ -643,31 +597,6 @@ class Carousel {
     ].style.transform = `translateX(calc(${offsetNext}% + (${px}px)))`;
     this.dispatchOffsetChange(px);
   }
-
-  /**
-   * @returns {number}
-   */
-  get autoInterval() {
-    const i = parseInt(this.el.dataset.autoInterval);
-    return typeof i === "number" && i > 0 ? i : undefined;
-  }
-
-  /**
-   * @param {Number} i
-   */
-  set autoInterval(i) {
-    if (typeof i === "number" && i > 0) {
-      if (this.autoInterval !== i) {
-        this.el.dataset.autoInterval = i.toString();
-      } else if (this.autoInterval) {
-        this.stopAutoSlide();
-        this.startAutoSlide();
-      }
-    } else {
-      delete this.el.dataset.autoInterval;
-      this.stopAutoSlide();
-    }
-  }
 }
 
 class CarouselControls {
@@ -693,4 +622,5 @@ class CarouselControls {
 }
 
 s = new Carousel(document.querySelector(".carousel"));
+a = new CarouselAutoMove(s);
 c = new CarouselControls(s);
