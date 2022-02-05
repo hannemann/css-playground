@@ -17,8 +17,30 @@ class CarouselAutoMove {
    */
   constructor(carousel) {
     this.carousel = carousel;
-    this.initListeners();
+    this.initObserver().initListeners();
     this.start();
+  }
+
+  /**
+   * initialize observers
+   * @returns {Carousel}
+   * @private
+   */
+  initObserver() {
+    this.observer = new MutationObserver((mutations) => {
+      mutations.forEach((m) => {
+        if (m.attributeName === "data-auto-pause") {
+          if (typeof this.carousel.el.dataset.autoPause === "undefined") {
+            this.start();
+          } else {
+            this.stop();
+          }
+        }
+      });
+    });
+
+    this.observer.observe(this.carousel.el, { attributes: true });
+    return this;
   }
 
   /**
@@ -74,10 +96,10 @@ class CarouselAutoMove {
    * @private
    */
   start() {
-    if (this.interval && !this.carousel.moving) {
+    if (this.interval && !this.paused && !this.carousel.moving) {
       this.stop();
       this._autoSlideInterval = setTimeout(() => {
-        if (!this.carousel.moving) {
+        if (!this.paused && !this.carousel.moving) {
           this.carousel.duration = this.duration;
           this.carousel.timingFunction = this.timingFunction;
           this.carousel.dir =
@@ -125,5 +147,9 @@ class CarouselAutoMove {
    */
   get timingFunction() {
     return this.carousel.el.dataset.autoTimingFunction || "ease-in-out";
+  }
+
+  get paused() {
+    return typeof this.carousel.el.dataset.autoPause !== "undefined";
   }
 }
