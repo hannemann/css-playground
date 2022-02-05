@@ -89,7 +89,8 @@ class CarouselAutoMove {
    * @private
    */
   start() {
-    if (this.interval) {
+    if (this.interval && !this.carousel.moving) {
+      this.stop();
       this._autoSlideInterval = setTimeout(() => {
         if (!this.carousel.moving) {
           const duration = parseInt(this.carousel.el.dataset.autoDuration);

@@ -115,7 +115,6 @@ class CarouselPointer {
       } else {
         this.carousel.dir = DIRECTIONS.fwd;
       }
-      this.carousel.transition = true;
       if (this.carousel.max === 1) {
         this.carousel.slides[this.carousel.next].classList.remove(
           CLASSNAMES.next
@@ -130,6 +129,7 @@ class CarouselPointer {
       this.carousel.dispatchTransitionStart();
     }
     this.pointerStart = null;
+    this.carousel.transition = true;
   }
 
   /**

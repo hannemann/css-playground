@@ -362,6 +362,8 @@ class Carousel {
   set moving(m) {
     if (m) {
       const reset = () => {
+        this.duration = this.defaultDuration;
+        this.timingFunction = this.defaultTimingFunction;
         this.moving = false;
         this.dispatchTransitionEnd();
       };
@@ -477,5 +479,5 @@ class CarouselControls {
 
 s = new Carousel(document.querySelector(".carousel"));
 a = new CarouselPointer(s);
-// a = new CarouselAutoMove(s);
+a = new CarouselAutoMove(s);
 c = new CarouselControls(s);
