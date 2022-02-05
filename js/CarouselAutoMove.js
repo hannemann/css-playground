@@ -7,7 +7,7 @@
  * data-auto-timing-function
  *  string sets the transition timing function of auto movemenet
  * data-auto-on-hover
- *  don't stop auto movement on hover
+ *  if truthy don't stop auto movement on hover
  * data-auto-dir
  *  auto movement direction, 'back'
  */
@@ -146,7 +146,15 @@ class CarouselAutoMove {
    * @returns {String}
    */
   get timingFunction() {
-    return this.carousel.el.dataset.autoTimingFunction || "ease-in-out";
+    const property = "transition-timing-function";
+    let timingFunction = this.carousel.el.dataset.autoTimingFunction;
+    const old = this.carousel.el.style.getPropertyValue(property);
+    this.carousel.el.style.setProperty(property, timingFunction);
+    if (timingFunction !== this.carousel.el.style.getPropertyValue(property)) {
+      timingFunction = "ease-in-out";
+    }
+    this.carousel.el.style.setProperty(property, old);
+    return timingFunction;
   }
 
   get paused() {

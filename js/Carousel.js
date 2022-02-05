@@ -22,6 +22,8 @@ const DIRECTIONS = {
 /**
  * possible data attributes:
  * data-current: set index of slide to move to
+ * data-duration: set transition duration
+ * data-timning-function: set transition timimg function
  *
  * Minimal Structure:
  *
@@ -34,15 +36,40 @@ class Carousel {
    */
   constructor(el) {
     this.el = el;
-    this.slider = this.el.querySelector(SELECTORS.slider);
-    this.duration = this.defaultDuration = this.el.dataset.duration || 250;
-    this.timingFunction = this.defaultTimingFunction =
-      this.el.dataset.timingFunction || "ease-in-out";
     this.initSlides();
     if (this.slides.length > 1) {
       this.dir = DIRECTIONS.fwd;
-      this.initObserver();
+      this.initTimingFunction().initDuration().initObserver();
     }
+  }
+
+  /**
+   * initialize duration
+   * @returns {Carousel}
+   */
+  initDuration() {
+    let duration = parseInt(this.el.dataset.duration);
+    duration = typeof duration === "number" && duration > 0 ? duration : 250;
+    this.duration = this.defaultDuration = duration;
+    return this;
+  }
+
+  /**
+   * initialize timing function
+   * @returns {Carousel}
+   */
+  initTimingFunction() {
+    const property = "transition-timing-function";
+    const timingFunction = this.el.dataset.timingFunction;
+    const old = this.el.style.getPropertyValue(property);
+    this.el.style.setProperty(property, timingFunction);
+    if (timingFunction === this.el.style.getPropertyValue(property)) {
+      this.timingFunction = this.defaultTimingFunction = timingFunction;
+    } else {
+      this.timingFunction = this.defaultTimingFunction = "ease-in-out";
+    }
+    this.el.style.setProperty(property, old);
+    return this;
   }
 
   /**
@@ -51,6 +78,7 @@ class Carousel {
    * @private
    */
   initSlides() {
+    this.slider = this.el.querySelector(SELECTORS.slider);
     this.slides = Array.from(this.el.querySelectorAll(SELECTORS.slides));
     this.max = this.slides.length - 1;
     this.el.style.setProperty("--item-count", this.slides.length);
@@ -73,6 +101,12 @@ class Carousel {
       mutations.forEach((m) => {
         if (m.attributeName === "data-current") {
           this.goto(parseInt(this.el.dataset.current, 10));
+        }
+        if (m.attributeName === "data-duration") {
+          this.initDuration();
+        }
+        if (m.attributeName === "data-timing-function") {
+          this.initTimingFunction();
         }
       });
     });
@@ -441,7 +475,7 @@ class Carousel {
    * @private
    */
   set transition(t) {
-    t = typeof t === "boolean" && t;
+    t = t === true;
     this.el.style.setProperty("--transition-property", t ? "" : "none");
     this.dispatchTransitionChange();
   }
@@ -479,6 +513,6 @@ class CarouselControls {
 }
 
 s = new Carousel(document.querySelector(".carousel"));
-a = new CarouselPointer(s);
+p = new CarouselPointer(s);
 a = new CarouselAutoMove(s);
 c = new CarouselControls(s);
