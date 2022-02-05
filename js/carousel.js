@@ -19,6 +19,17 @@ const DIRECTIONS = {
   fwd: 1,
 };
 
+/**
+ * possible data attributes:
+ * data-auto-interval
+ *  integer ms sets the auto move interval. delete to stop
+ * data-auto-duration
+ *  integer ms sets the transition duration of auto movemenet
+ * data-auto-timing-function
+ *  string sets the transition timing function of auto movemenet
+ * data-auto-on-hover
+ *  dont stop auto movement on hover
+ */
 class Carousel {
   constructor(el, options = { timingFunction: "ease-in-out", duration: 250 }) {
       this.el = el;
@@ -61,7 +72,7 @@ class Carousel {
       this.slider.addEventListener("pointermove", this.pointerMove.bind(this));
       this.slider.addEventListener("pointerup", this.pointerUp.bind(this));
       this.slider.addEventListener("pointerenter", this.pointerEnter.bind(this));
-      this.slider.addEventListener("pointerleave", this.pointerUp.bind(this));
+      this.slider.addEventListener("pointerleave", this.pointerLeave.bind(this));
       return this;
   }
 
@@ -105,6 +116,18 @@ class Carousel {
       if (!this.el.dataset.autoOnHover) {
           this.stopAutoSlide();
       }
+  }
+
+  /**
+   * handle pointer leave events
+   * @param {PointerEvent} e
+   * @private
+   */
+  pointerLeave(e) {
+      if (!this.el.dataset.autoOnHover) {
+          this.startAutoSlide();
+      }
+      this.pointerUp(e);
   }
 
   /**
@@ -492,6 +515,11 @@ class Carousel {
    */
   set moving(m) {
       if (m) {
+        const reset = () => {
+          this.moving = false;
+          this.dispatchTransitionEnd();
+          this.startAutoSlide();
+        };
           this.slides[this.cur].addEventListener(
               "transitionend",
               () => {
@@ -501,15 +529,11 @@ class Carousel {
                           this.slides[this.next].classList.remove(CLASSNAMES.next);
                           requestAnimationFrame(() => {
                               this.transition = true;
-                              this.moving = false;
-                              this.dispatchTransitionEnd();
-                              this.startAutoSlide();
+                              reset();
                           });
                       });
                   } else {
-                      this.moving = false;
-                      this.dispatchTransitionEnd();
-                      this.startAutoSlide();
+                    reset();
                   }
               },
               { once: true }
