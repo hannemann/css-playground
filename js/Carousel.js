@@ -109,8 +109,6 @@ class Carousel {
     if (this.moving || this.count === 1) return;
     if (n !== this.cur) {
       this.dir = n > this.cur ? DIRECTIONS.fwd : DIRECTIONS.back;
-      this.duration = 60;
-      this.timingFunction = "linear";
       this.moveRecursive(n);
     }
   }
@@ -122,6 +120,8 @@ class Carousel {
    */
   moveRecursive(n) {
     const next = this.dir === DIRECTIONS.fwd ? this.cur + 1 : this.cur - 1;
+    this.duration = 60;
+    this.timingFunction = "linear";
     if (next !== n) {
       this.slides[this.cur].addEventListener(
         "transitionend",
