@@ -40,7 +40,7 @@ class Carousel {
     this.initSlides();
     if (this.slides.length > 1) {
       this.dir = DIRECTIONS.fwd;
-      this.initPointer().initObserver();
+      this.initObserver();
     }
   }
 
@@ -63,21 +63,6 @@ class Carousel {
   }
 
   /**
-   * initialize pointer events
-   * @returns {Carousel}
-   * @private
-   */
-  initPointer() {
-    this.pointerStart = null;
-    this.slider.addEventListener("pointerdown", this.pointerDown.bind(this));
-    this.slider.addEventListener("pointermove", this.pointerMove.bind(this));
-    this.slider.addEventListener("pointerup", this.pointerUp.bind(this));
-    this.slider.addEventListener("pointerenter", this.pointerEnter.bind(this));
-    this.slider.addEventListener("pointerleave", this.pointerLeave.bind(this));
-    return this;
-  }
-
-  /**
    * initialize observers
    * @returns {Carousel}
    * @private
@@ -93,84 +78,6 @@ class Carousel {
 
     this.observer.observe(this.el, { attributes: true });
     return this;
-  }
-
-  /**
-   * handle pointer enter events
-   * @param {PointerEvent} e
-   * @private
-   */
-  pointerEnter(e) {
-    this.dispatchSliderEnter();
-  }
-
-  /**
-   * handle pointer leave events
-   * @param {PointerEvent} e
-   * @private
-   */
-  pointerLeave(e) {
-    this.dispatchSliderLeave();
-    this.pointerUp(e);
-  }
-
-  /**
-   * handle pointer down event
-   * @param {PointerEvent} e
-   * @private
-   */
-  pointerDown(e) {
-    e.preventDefault();
-    if (!this.moving) {
-      this.pointerStart = e.pageX;
-      this.transition = false;
-    }
-  }
-
-  /**
-   * handle pointer move event
-   * @param {PointerEvent} e
-   * @private
-   */
-  pointerMove(e) {
-    e.preventDefault();
-    if (!this.moving && this.pointerStart) {
-      const delta = e.pageX - this.pointerStart;
-      if (Math.abs(delta) > 0) {
-        this.dir = delta > 0 ? DIRECTIONS.back : DIRECTIONS.fwd;
-        this.setPrev().setNext();
-        this.pxOffset = delta;
-      }
-    }
-  }
-
-  /**
-   * handle pointer up event
-   * @param {PointerEvent} e
-   * @private
-   */
-  pointerUp(e) {
-    e.preventDefault();
-    if (!this.moving && this.slides[this.cur].style.transform !== "") {
-      this.moving = true;
-      if (e.pageX - this.pointerStart > 0) {
-        this.dir = DIRECTIONS.back;
-      } else {
-        this.dir = DIRECTIONS.fwd;
-      }
-      this.transition = true;
-      if (this.max === 1) {
-        this.slides[this.next].classList.remove(CLASSNAMES.next);
-      }
-      this.slides[this.prev].style.transform = "";
-      this.slides[this.cur].style.transform = "";
-      this.slides[this.next].style.transform = "";
-      this.setCur();
-      this.max > 1 && this.setNext();
-      this.setPrev();
-      this.dispatchTransitionStart();
-    }
-    this.pointerStart = null;
   }
 
   /**
@@ -321,28 +228,6 @@ class Carousel {
   }
 
   /**
-   * dispatch pointer enter event
-   */
-  dispatchSliderEnter() {
-    this.el.dispatchEvent(
-      new CustomEvent("slider-pointerenter", {
-        detail: this.eventData,
-      })
-    );
-  }
-
-  /**
-   * dispatch pointer leave event
-   */
-  dispatchSliderLeave() {
-    this.el.dispatchEvent(
-      new CustomEvent("slider-pointerleave", {
-        detail: this.eventData,
-      })
-    );
-  }
-
-  /**
    * dispatch transition start event
    */
   dispatchTransitionBefore() {
@@ -371,18 +256,6 @@ class Carousel {
     this.el.dispatchEvent(
       new CustomEvent("slider-transitionend", {
         detail: this.eventData,
-      })
-    );
-  }
-
-  /**
-   * dispatch offset change event
-   * @param {Number} offset
-   */
-  dispatchOffsetChange(offset) {
-    this.el.dispatchEvent(
-      new CustomEvent("slider-offsetchange", {
-        detail: Object.assign(this.eventData, { offset }),
       })
     );
   }
@@ -578,25 +451,6 @@ class Carousel {
   get transition() {
     return this.el.style.getPropertyValue("--transition-property") !== "none";
   }
-
-  /**
-   * set pixel based offset
-   * @param {Number} px number of pixels
-   * @private
-   */
-  set pxOffset(px) {
-    // hint: prev and next exchange their position if direction changes
-    const offsetPrev = this.dir === DIRECTIONS.fwd ? -100 : 100;
-    const offsetNext = this.dir === DIRECTIONS.fwd ? 100 : -100;
-    this.slides[
-      this.prev
-    ].style.transform = `translateX(calc(${offsetPrev}% + (${px}px)))`;
-    this.slides[this.cur].style.transform = `translateX(${px}px)`;
-    this.slides[
-      this.next
-    ].style.transform = `translateX(calc(${offsetNext}% + (${px}px)))`;
-    this.dispatchOffsetChange(px);
-  }
 }
 
 class CarouselControls {
@@ -622,5 +476,6 @@ class CarouselControls {
 }
 
 s = new Carousel(document.querySelector(".carousel"));
-a = new CarouselAutoMove(s);
+a = new CarouselPointer(s);
+// a = new CarouselAutoMove(s);
 c = new CarouselControls(s);
