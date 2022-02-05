@@ -1,40 +1,40 @@
 .carousel {
-    margin: 0 auto;
-    width: 600px;
-    max-width: 100%;
-    --move: 1;
-    --duration: 250ms;
-    --timing-function: ease-in-out;
-    --transition-property: all;
+  margin: 0 auto;
+  width: 600px;
+  max-width: 100%;
+  --move: 1;
+  --duration: 250ms;
+  --timing-function: ease-in-out;
+  --transition-property: all;
 }
 
 .slides {
-    aspect-ratio: 16 / 9;
-    position: relative;
-    overflow: hidden;
-    z-index: 0;
+  aspect-ratio: 16 / 9;
+  position: relative;
+  overflow: hidden;
+  z-index: 0;
 }
 
 .slides > * {
-    grid-row: 1;
-    width: 100%;
-    transition: var(--transition-property) var(--duration) var(--timing-function);
-    position: absolute;
+  grid-row: 1;
+  width: 100%;
+  transition: var(--transition-property) var(--duration) var(--timing-function);
+  position: absolute;
 }
 
 .slides > *:not(.prev):not(.cur):not(.next) {
-    display: none;
+  display: none;
 }
 
 .slides .prev {
-    transform: translateX(calc(var(--move) * -100%));
+  transform: translateX(calc(var(--move) * -100%));
 }
 .slides .cur {
-    transform: translateX(0);
-    z-index: 1;
+  transform: translateX(0);
+  z-index: 1;
 }
 .slides .next {
-    transform: translateX(calc(var(--move) * 100%));
+  transform: translateX(calc(var(--move) * 100%));
 }
 
 .carousel.moving .slides .prev,
