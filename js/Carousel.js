@@ -21,22 +21,23 @@ const DIRECTIONS = {
 
 /**
  * possible data attributes:
- * data-auto-interval
- *  integer ms sets the auto move interval. delete to stop
- * data-auto-duration
- *  integer ms sets the transition duration of auto movemenet
- * data-auto-timing-function
- *  string sets the transition timing function of auto movemenet
- * data-auto-on-hover
- *  don't stop auto movement on hover
+ * data-current: set index of slide to move to
+ *
+ * Minimal Structure:
+ *
+ * .carousel>.slides>.slide*n
  */
 class Carousel {
-  constructor(el, options = { timingFunction: "ease-in-out", duration: 250 }) {
+  /**
+   *
+   * @param {HTMLElement} el The carousel wrapper element
+   */
+  constructor(el) {
     this.el = el;
     this.slider = this.el.querySelector(SELECTORS.slider);
-    this.duration = this.defaultDuration = options.duration || 250;
+    this.duration = this.defaultDuration = this.el.dataset.duration || 250;
     this.timingFunction = this.defaultTimingFunction =
-      options.timingFunction || "ease-in-out";
+      this.el.dataset.timingFunction || "ease-in-out";
     this.initSlides();
     if (this.slides.length > 1) {
       this.dir = DIRECTIONS.fwd;

@@ -1,46 +1,24 @@
+/**
+ * possible data attributes:
+ * data-auto-interval
+ *  integer ms sets the auto move interval. delete to stop
+ * data-auto-duration
+ *  integer ms sets the transition duration of auto movemenet
+ * data-auto-timing-function
+ *  string sets the transition timing function of auto movemenet
+ * data-auto-on-hover
+ *  don't stop auto movement on hover
+ * data-auto-dir
+ *  auto movement direction, 'back'
+ */
 class CarouselAutoMove {
   /**
    * @param {Carousel} carousel
    */
   constructor(carousel) {
     this.carousel = carousel;
-    this.init();
-  }
-
-  /**
-   * initialize auto slide
-   */
-  init() {
-    this.initObserver().initListeners();
-    if (this.interval) {
-      this.carousel.el.addEventListener(
-        "slider-transitionbefore",
-        this.stop.bind(this)
-      );
-      this.carousel.el.addEventListener("slider-transitionend", () => {
-        (!this._hover || this.carousel.el.dataset.autoOnHover) && this.start();
-      });
-      this.start();
-    }
-    return this;
-  }
-
-  /**
-   * initialize observers
-   * @returns {CarouselAutoMove}
-   * @private
-   */
-  initObserver() {
-    this.observer = new MutationObserver((mutations) => {
-      mutations.forEach((m) => {
-        if (m.attributeName === "data-auto-interval") {
-          this.interval = parseInt(this.carousel.el.dataset.autoInterval);
-        }
-      });
-    });
-
-    this.observer.observe(this.carousel.el, { attributes: true });
-    return this;
+    this.initListeners();
+    this.start();
   }
 
   /**
@@ -49,6 +27,13 @@ class CarouselAutoMove {
    * @private
    */
   initListeners() {
+    this.carousel.el.addEventListener(
+      "slider-transitionbefore",
+      this.stop.bind(this)
+    );
+    this.carousel.el.addEventListener("slider-transitionend", () => {
+      (!this._hover || this.carousel.el.dataset.autoOnHover) && this.start();
+    });
     this.carousel.el.addEventListener(
       "slider-pointerenter",
       this.pointerEnter.bind(this)
@@ -93,24 +78,13 @@ class CarouselAutoMove {
       this.stop();
       this._autoSlideInterval = setTimeout(() => {
         if (!this.carousel.moving) {
-          const duration = parseInt(this.carousel.el.dataset.autoDuration);
-          const timingFunction = this.carousel.el.dataset.autoTimingFunction;
-          if (typeof duration === "number" && duration > 0) {
-            this.duration = duration;
-          }
-          if (timingFunction) {
-            this.timingFunction = timingFunction;
-          }
-          this.carousel.dir = DIRECTIONS.fwd;
+          this.carousel.duration = this.duration;
+          this.carousel.timingFunction = this.timingFunction;
+          this.carousel.dir =
+            this.carousel.el.dataset.autoDir === "back"
+              ? DIRECTIONS.back
+              : DIRECTIONS.fwd;
           this.carousel.move();
-          this.carousel.slides[this.carousel.cur].addEventListener(
-            "transitionend",
-            () => {
-              this.duration = this.carousel.defaultDuration;
-              this.timingFunction = this.carousel.defaultTimingFunction;
-            },
-            { once: true }
-          );
         }
       }, this.interval);
     }
@@ -128,57 +102,28 @@ class CarouselAutoMove {
   }
 
   /**
+   * obtain auto interval
    * @returns {Number}
    */
   get interval() {
     const i = parseInt(this.carousel.el.dataset.autoInterval);
-    return typeof i === "number" && i > 0 ? i : undefined;
+    return typeof i === "number" && i > 0 ? i : 5000;
   }
 
   /**
-   * @param {Number} i
-   */
-  set interval(i) {
-    if (typeof i === "number" && i > 0) {
-      if (this.interval !== i) {
-        this.carousel.el.dataset.autoInterval = i.toString();
-      } else if (this.interval) {
-        this.stop();
-        this.start();
-      }
-    } else {
-      delete this.carousel.el.dataset.autoInterval;
-      this.stop();
-    }
-  }
-
-  /**
-   * obtain transition duration
+   * obtain auto duration
+   * @return {Number}
    */
   get duration() {
-    return this.carousel.duration;
+    const d = parseInt(this.carousel.el.dataset.autoDuration);
+    return typeof d === "number" && d > 0 ? d : 1000;
   }
 
   /**
-   * set transition duration
-   * @param {Number} d
-   */
-  set duration(d) {
-    this.carousel.duration = d;
-  }
-
-  /**
-   * obtain transition timing function
+   * obtain auto timing function
+   * @returns {String}
    */
   get timingFunction() {
-    return this.carousel.timingFunction;
-  }
-
-  /**
-   * set transition timing function
-   * @param {String} t
-   */
-  set timingFunction(t) {
-    this.carousel.timingFunction = t;
+    return this.carousel.el.dataset.autoTimingFunction || "ease-in-out";
   }
 }
