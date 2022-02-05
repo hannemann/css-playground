@@ -103,6 +103,13 @@ class Carousel {
    */
   initAutoSlide() {
     if (this.autoInterval) {
+      this.el.addEventListener(
+        "slider-transitionbefore",
+        this.stopAutoSlide.bind(this)
+      );
+      this.el.addEventListener("slider-transitionend", () => {
+        (!this._hover || this.el.dataset.autoOnHover) && this.startAutoSlide();
+      });
       this.startAutoSlide();
     }
     return this;
@@ -114,6 +121,7 @@ class Carousel {
    * @private
    */
   pointerEnter(e) {
+    this._hover = true;
     if (!this.el.dataset.autoOnHover) {
       this.stopAutoSlide();
     }
@@ -129,6 +137,7 @@ class Carousel {
       this.startAutoSlide();
     }
     this.pointerUp(e);
+    delete this._hover;
   }
 
   /**
@@ -139,7 +148,6 @@ class Carousel {
   pointerDown(e) {
     e.preventDefault();
     if (!this.moving) {
-      this.stopAutoSlide();
       this.pointerStart = e.pageX;
       this.transition = false;
     }
@@ -261,7 +269,7 @@ class Carousel {
    * @private
    */
   move() {
-    this.stopAutoSlide();
+    this.dispatchTransitionBefore();
     this.moving = true;
     if (this.max === 1) {
       this.transition = false;
@@ -284,12 +292,12 @@ class Carousel {
    * @private
    */
   startAutoSlide() {
-    if (!isNaN(this.autoInterval) && this.autoInterval > 0) {
+    if (this.autoInterval) {
       this._autoSlideInterval = setTimeout(() => {
         if (!this.moving) {
           const duration = parseInt(this.el.dataset.autoDuration);
           const timingFunction = this.el.dataset.autoTimingFunction;
-          if (!isNaN(duration)) {
+          if (typeof duration === "number") {
             this.duration = duration;
           }
           if (timingFunction) {
@@ -375,6 +383,17 @@ class Carousel {
   dispatchTransitionChange() {
     this.el.dispatchEvent(
       new CustomEvent("slider-transitionchange", {
+        detail: this.eventData,
+      })
+    );
+  }
+
+  /**
+   * dispatch transition start event
+   */
+  dispatchTransitionBefore() {
+    this.el.dispatchEvent(
+      new CustomEvent("slider-transitionbefore", {
         detail: this.eventData,
       })
     );
@@ -518,7 +537,6 @@ class Carousel {
       const reset = () => {
         this.moving = false;
         this.dispatchTransitionEnd();
-        this.startAutoSlide();
       };
       this.slides[this.cur].addEventListener(
         "transitionend",
@@ -630,17 +648,18 @@ class Carousel {
    * @returns {number}
    */
   get autoInterval() {
-    return parseInt(this.el.dataset.autoInterval);
+    const i = parseInt(this.el.dataset.autoInterval);
+    return typeof i === "number" && i > 0 ? i : undefined;
   }
 
   /**
    * @param {Number} i
    */
   set autoInterval(i) {
-    if (!isNaN(i) && i > 0) {
+    if (typeof i === "number" && i > 0) {
       if (this.autoInterval !== i) {
         this.el.dataset.autoInterval = i.toString();
-      } else if (!isNaN(this.autoInterval) && this.autoInterval > 0) {
+      } else if (this.autoInterval) {
         this.stopAutoSlide();
         this.startAutoSlide();
       }
