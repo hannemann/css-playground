@@ -104,8 +104,8 @@ class CarouselAutoMove {
           this.carousel.timingFunction = this.timingFunction;
           this.carousel.dir =
             this.carousel.el.dataset.autoDir === "back"
-              ? DIRECTIONS.back
-              : DIRECTIONS.fwd;
+              ? Carousel.DIRECTIONS.back
+              : Carousel.DIRECTIONS.fwd;
           this.carousel.move();
         }
       }, this.interval);

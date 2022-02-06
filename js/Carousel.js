@@ -7,18 +7,6 @@ const SELECTORS = {
   btnGoto: ":scope > span.goto",
 };
 
-const CLASSNAMES = {
-  prev: "prev",
-  cur: "cur",
-  next: "next",
-  moving: "moving",
-};
-
-const DIRECTIONS = {
-  back: -1,
-  fwd: 1,
-};
-
 /**
  * possible data attributes:
  * data-current: set index of slide to move to
@@ -31,14 +19,36 @@ const DIRECTIONS = {
  */
 class Carousel {
   /**
-   *
+   * numeric representation of possible directions
+   * used to calculate offset of prev and next slides in css
+   */
+  static get DIRECTIONS() {
+    return {
+      back: -1,
+      fwd: 1,
+    };
+  }
+
+  /**
+   * utilized classnames
+   */
+  static get CLASSNAMES() {
+    return {
+      prev: "prev",
+      cur: "cur",
+      next: "next",
+      moving: "moving",
+    };
+  }
+
+  /**
    * @param {HTMLElement} el The carousel wrapper element
    */
   constructor(el) {
     this.el = el;
     this.initSlides();
     if (this.slides.length > 1) {
-      this.dir = DIRECTIONS.fwd;
+      this.dir = Carousel.DIRECTIONS.fwd;
       this.initTimingFunction().initDuration().initObserver();
     }
   }
@@ -85,9 +95,10 @@ class Carousel {
     this.prev = this.max;
     this.cur = 0;
     this.next = 1;
-    this.slides[this.prev].classList.add(CLASSNAMES.prev);
-    this.slides[this.cur].classList.add(CLASSNAMES.cur);
-    this.max > 1 && this.slides[this.next].classList.add(CLASSNAMES.next);
+    this.slides[this.prev].classList.add(Carousel.CLASSNAMES.prev);
+    this.slides[this.cur].classList.add(Carousel.CLASSNAMES.cur);
+    this.max > 1 &&
+      this.slides[this.next].classList.add(Carousel.CLASSNAMES.next);
     return this;
   }
 
@@ -121,7 +132,7 @@ class Carousel {
    */
   back() {
     if (this.moving || this.count === 1) return;
-    this.dir = DIRECTIONS.back;
+    this.dir = Carousel.DIRECTIONS.back;
     this.move();
   }
 
@@ -131,7 +142,7 @@ class Carousel {
    */
   fwd() {
     if (this.moving || this.count === 1) return;
-    this.dir = DIRECTIONS.fwd;
+    this.dir = Carousel.DIRECTIONS.fwd;
     this.move();
   }
 
@@ -143,7 +154,8 @@ class Carousel {
   goto(n) {
     if (this.moving || this.count === 1) return;
     if (n !== this.cur) {
-      this.dir = n > this.cur ? DIRECTIONS.fwd : DIRECTIONS.back;
+      this.dir =
+        n > this.cur ? Carousel.DIRECTIONS.fwd : Carousel.DIRECTIONS.back;
       this.moveRecursive(n);
     }
   }
@@ -154,7 +166,8 @@ class Carousel {
    * @private
    */
   moveRecursive(n) {
-    const next = this.dir === DIRECTIONS.fwd ? this.cur + 1 : this.cur - 1;
+    const next =
+      this.dir === Carousel.DIRECTIONS.fwd ? this.cur + 1 : this.cur - 1;
     this.duration = 60;
     this.timingFunction = "linear";
     if (next !== n) {
@@ -190,7 +203,7 @@ class Carousel {
     if (this.max === 1) {
       this.transition = false;
       requestAnimationFrame(() => {
-        this.slides[this.next].classList.remove(CLASSNAMES.next);
+        this.slides[this.next].classList.remove(Carousel.CLASSNAMES.next);
         requestAnimationFrame(() => {
           this.transition = true;
           this.setCur().setNext().setPrev();
@@ -209,13 +222,13 @@ class Carousel {
    * @private
    */
   setCur() {
-    this.slides[this.cur].classList.remove(CLASSNAMES.cur);
-    if (this.dir === DIRECTIONS.fwd) {
+    this.slides[this.cur].classList.remove(Carousel.CLASSNAMES.cur);
+    if (this.dir === Carousel.DIRECTIONS.fwd) {
       this.cur = this.cur + 1 > this.max ? 0 : this.cur + 1;
     } else {
       this.cur = this.cur - 1 < 0 ? this.max : this.cur - 1;
     }
-    this.slides[this.cur].classList.add(CLASSNAMES.cur);
+    this.slides[this.cur].classList.add(Carousel.CLASSNAMES.cur);
     return this;
   }
 
@@ -225,13 +238,13 @@ class Carousel {
    * @private
    */
   setNext() {
-    this.slides[this.next].classList.remove(CLASSNAMES.next);
-    if (this.dir === DIRECTIONS.fwd) {
+    this.slides[this.next].classList.remove(Carousel.CLASSNAMES.next);
+    if (this.dir === Carousel.DIRECTIONS.fwd) {
       this.next = this.cur + 1 > this.max ? 0 : this.cur + 1;
     } else {
       this.next = this.cur - 1 < 0 ? this.max : this.cur - 1;
     }
-    this.slides[this.next].classList.add(CLASSNAMES.next);
+    this.slides[this.next].classList.add(Carousel.CLASSNAMES.next);
     return this;
   }
 
@@ -241,13 +254,13 @@ class Carousel {
    * @private
    */
   setPrev() {
-    this.slides[this.prev].classList.remove(CLASSNAMES.prev);
-    if (this.dir === DIRECTIONS.fwd) {
+    this.slides[this.prev].classList.remove(Carousel.CLASSNAMES.prev);
+    if (this.dir === Carousel.DIRECTIONS.fwd) {
       this.prev = this.cur - 1 < 0 ? this.max : this.cur - 1;
     } else {
       this.prev = this.cur + 1 > this.max ? 0 : this.cur + 1;
     }
-    this.slides[this.prev].classList.add(CLASSNAMES.prev);
+    this.slides[this.prev].classList.add(Carousel.CLASSNAMES.prev);
     return this;
   }
 
@@ -408,7 +421,7 @@ class Carousel {
           if (this.max === 1) {
             this.transition = false;
             requestAnimationFrame(() => {
-              this.slides[this.next].classList.remove(CLASSNAMES.next);
+              this.slides[this.next].classList.remove(Carousel.CLASSNAMES.next);
               requestAnimationFrame(() => {
                 this.transition = true;
                 reset();
@@ -421,7 +434,7 @@ class Carousel {
         { once: true }
       );
     }
-    this.el.classList.toggle(CLASSNAMES.moving, m);
+    this.el.classList.toggle(Carousel.CLASSNAMES.moving, m);
   }
 
   /**
@@ -430,7 +443,7 @@ class Carousel {
    * @private
    */
   get moving() {
-    return this.el.classList.contains(CLASSNAMES.moving);
+    return this.el.classList.contains(Carousel.CLASSNAMES.moving);
   }
 
   /**

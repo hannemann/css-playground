@@ -81,7 +81,8 @@ class CarouselPointer {
     if (!this.carousel.moving && this.pointerStart) {
       const delta = e.pageX - this.pointerStart;
       if (Math.abs(delta) > 0) {
-        this.carousel.dir = delta > 0 ? DIRECTIONS.back : DIRECTIONS.fwd;
+        this.carousel.dir =
+          delta > 0 ? Carousel.DIRECTIONS.back : Carousel.DIRECTIONS.fwd;
         this.carousel.setPrev().setNext();
         this.pxOffset = delta;
       }
@@ -111,13 +112,13 @@ class CarouselPointer {
       this.carousel.timingFunction = "ease-out";
 
       if (e.pageX - this.pointerStart > 0) {
-        this.carousel.dir = DIRECTIONS.back;
+        this.carousel.dir = Carousel.DIRECTIONS.back;
       } else {
-        this.carousel.dir = DIRECTIONS.fwd;
+        this.carousel.dir = Carousel.DIRECTIONS.fwd;
       }
       if (this.carousel.max === 1) {
         this.carousel.slides[this.carousel.next].classList.remove(
-          CLASSNAMES.next
+          Carousel.CLASSNAMES.next
         );
       }
       this.carousel.slides[this.carousel.prev].style.transform = "";
@@ -173,8 +174,10 @@ class CarouselPointer {
    */
   set pxOffset(px) {
     // hint: prev and next exchange their position if direction changes
-    const offsetPrev = this.carousel.dir === DIRECTIONS.fwd ? -100 : 100;
-    const offsetNext = this.carousel.dir === DIRECTIONS.fwd ? 100 : -100;
+    const offsetPrev =
+      this.carousel.dir === Carousel.DIRECTIONS.fwd ? -100 : 100;
+    const offsetNext =
+      this.carousel.dir === Carousel.DIRECTIONS.fwd ? 100 : -100;
     this.carousel.slides[
       this.carousel.prev
     ].style.transform = `translateX(calc(${offsetPrev}% + (${px}px)))`;
