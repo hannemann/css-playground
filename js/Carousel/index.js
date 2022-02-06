@@ -107,10 +107,10 @@ export class Carousel {
     this.prev = this.max;
     this.cur = 0;
     this.next = 1;
-    this.slides[this.prev].classList.add(Carousel.CLASSNAMES.prev);
+    this.slides[this.next].classList.add(Carousel.CLASSNAMES.next);
     this.slides[this.cur].classList.add(Carousel.CLASSNAMES.cur);
     this.max > 1 &&
-      this.slides[this.next].classList.add(Carousel.CLASSNAMES.next);
+      this.slides[this.prev].classList.add(Carousel.CLASSNAMES.prev);
     return this;
   }
 
@@ -215,7 +215,7 @@ export class Carousel {
     if (this.max === 1) {
       this.transition = false;
       requestAnimationFrame(() => {
-        this.slides[this.next].classList.remove(Carousel.CLASSNAMES.next);
+        this.slides[this.prev].classList.remove(Carousel.CLASSNAMES.prev);
         requestAnimationFrame(() => {
           this.transition = true;
           this.setCur().setNext().setPrev();
@@ -433,7 +433,7 @@ export class Carousel {
           if (this.max === 1) {
             this.transition = false;
             requestAnimationFrame(() => {
-              this.slides[this.next].classList.remove(Carousel.CLASSNAMES.next);
+              this.slides[this.prev].classList.remove(Carousel.CLASSNAMES.prev);
               requestAnimationFrame(() => {
                 this.transition = true;
                 reset();

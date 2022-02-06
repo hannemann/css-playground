@@ -1,3 +1,8 @@
+body {
+  display: grid;
+  gap: 1rem;
+}
+
 .carousel {
   margin: 0 auto;
   width: 600px;
@@ -16,7 +21,6 @@
 }
 
 .slides > * {
-  grid-row: 1;
   width: 100%;
   transition: var(--transition-property) var(--duration) var(--timing-function);
   position: absolute;
@@ -26,18 +30,25 @@
   display: none;
 }
 
-.slides .prev {
+/**
+ * .cur turns into .prev and than to
+ * .next if there are two slides only
+ * hence .prev has to have higher specifity
+ * hence the second class selector 
+ */
+.slides .prev.prev {
   transform: translateX(calc(var(--move) * -100%));
 }
+
 .slides .cur {
   transform: translateX(0);
-  z-index: 1;
 }
+
 .slides .next {
   transform: translateX(calc(var(--move) * 100%));
 }
 
-.carousel.moving .slides .prev,
+.carousel.moving .slides .next,
 .carousel.moving .slides .cur {
-  z-index: 4;
+  z-index: 1;
 }

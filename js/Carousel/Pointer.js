@@ -113,36 +113,36 @@ export class CarouselPointer {
       this.carousel.slides[this.carousel.cur].style.transform !== ""
     ) {
       this.carousel.moving = true;
-
-      const duration = performance.now() - this.pointerTime;
-      delete this.pointerTime;
-      const delta = Math.abs(this.pointerStart - e.pageX);
-      const rest = this.carousel.slides[this.carousel.cur].offsetWidth - delta;
-      const speed = delta / duration;
-      const restDuration = rest / speed;
-      this.carousel.duration = Math.min(1000, Math.round(restDuration));
-      this.carousel.timingFunction = "ease-out";
-
+      this.setRemainingDuration(e);
       if (e.pageX - this.pointerStart > 0) {
         this.carousel.dir = Carousel.DIRECTIONS.back;
       } else {
         this.carousel.dir = Carousel.DIRECTIONS.fwd;
       }
-      if (this.carousel.max === 1) {
-        this.carousel.slides[this.carousel.next].classList.remove(
-          Carousel.CLASSNAMES.next
-        );
-      }
       this.carousel.slides[this.carousel.prev].style.transform = "";
       this.carousel.slides[this.carousel.cur].style.transform = "";
       this.carousel.slides[this.carousel.next].style.transform = "";
-      this.carousel.setCur();
-      this.carousel.max > 1 && this.carousel.setNext();
-      this.carousel.setPrev();
+      this.carousel.setCur().setPrev().setNext();
       this.carousel.dispatchTransitionStart();
     }
     this.pointerStart = null;
     this.carousel.transition = true;
+  }
+
+  /**
+   * caclulate and set the duration of the remaining transition
+   * @param {PointerEvent} e
+   * @private
+   */
+  setRemainingDuration(e) {
+    const duration = performance.now() - this.pointerTime;
+    const delta = Math.abs(this.pointerStart - e.pageX);
+    const rest = this.carousel.slides[this.carousel.cur].offsetWidth - delta;
+    const speed = delta / duration;
+    const restDuration = rest / speed;
+    this.carousel.duration = Math.min(1000, Math.round(restDuration));
+    this.carousel.timingFunction = "ease-out";
+    delete this.pointerTime;
   }
 
   /**
