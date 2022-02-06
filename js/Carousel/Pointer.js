@@ -1,5 +1,11 @@
 import { Carousel } from "./index.js";
 
+/**
+ * possible data attributes:
+ * data-snap
+ *  0|range 2,10 movement must be greater than width divided by snap
+ *  if not slide bounces back. Default: 6 (20%) 0 disables
+ */
 export class CarouselPointer {
   /**
    * events thrown
@@ -109,11 +115,18 @@ export class CarouselPointer {
     e.preventDefault();
     if (!this.carousel.moving && this.pxOffset) {
       this.carousel.moving = true;
-      this.setRemainingDuration(e);
-      this.carousel.dir =
-        Carousel.DIRECTIONS[e.pageX - this.pointerStart > 0 ? "back" : "fwd"];
+      this.carousel.timingFunction = "ease-out";
+      const delta = e.pageX - this.pointerStart;
+      const minDelta = this.snap
+        ? this.carousel.slides[this.carousel.cur].offsetWidth / this.snap
+        : 0;
+      // moved at least by minDelta else bounce back
+      if (Math.abs(delta) >= minDelta) {
+        this.carousel.dir = Carousel.DIRECTIONS[delta > 0 ? "back" : "fwd"];
+        this.setRemainingDuration(e);
+        this.carousel.setCur().setPrev().setNext();
+      }
       this.pxOffset = undefined;
-      this.carousel.setCur().setPrev().setNext();
       this.carousel.dispatchTransitionStart();
     }
     this.pointerStart = null;
@@ -133,7 +146,6 @@ export class CarouselPointer {
     // must be minimum of 1 animation frame to prevent transitionend event does not fire
     const restDuration = Math.max(1000 / 60, Math.round(rest / speed));
     this.carousel.duration = Math.min(1000, Math.round(restDuration));
-    this.carousel.timingFunction = "ease-out";
     delete this.pointerTime;
   }
 
@@ -207,5 +219,17 @@ export class CarouselPointer {
   get pxOffset() {
     const style = getComputedStyle(this.carousel.slides[this.carousel.cur]);
     return new DOMMatrix(style.getPropertyValue("transform")).m41;
+  }
+
+  /**
+   * obtain snap divisor
+   * @return {Number}
+   */
+  get snap() {
+    const d = parseInt(this.carousel.el.dataset.snap);
+    if (!isNaN(d)) {
+      return d === 0 ? 0 : Math.max(2, Math.min(10, d));
+    }
+    return 6;
   }
 }
