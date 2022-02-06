@@ -42,6 +42,18 @@ class Carousel {
   }
 
   /**
+   * events thrown
+   */
+  static get EVENTS() {
+    return {
+      before: "slider-transitionbefore",
+      start: "slider-transitionstart",
+      end: "slider-transitionend",
+      change: "slider-transitionchange",
+    };
+  }
+
+  /**
    * @param {HTMLElement} el The carousel wrapper element
    */
   constructor(el) {
@@ -269,7 +281,7 @@ class Carousel {
    */
   dispatchTransitionChange() {
     this.el.dispatchEvent(
-      new CustomEvent("slider-transitionchange", {
+      new CustomEvent(Carousel.EVENTS.change, {
         detail: this.eventData,
       })
     );
@@ -280,7 +292,7 @@ class Carousel {
    */
   dispatchTransitionBefore() {
     this.el.dispatchEvent(
-      new CustomEvent("slider-transitionbefore", {
+      new CustomEvent(Carousel.EVENTS.before, {
         detail: this.eventData,
       })
     );
@@ -291,7 +303,7 @@ class Carousel {
    */
   dispatchTransitionStart() {
     this.el.dispatchEvent(
-      new CustomEvent("slider-transitionstart", {
+      new CustomEvent(Carousel.EVENTS.start, {
         detail: this.eventData,
       })
     );
@@ -302,7 +314,7 @@ class Carousel {
    */
   dispatchTransitionEnd() {
     this.el.dispatchEvent(
-      new CustomEvent("slider-transitionend", {
+      new CustomEvent(Carousel.EVENTS.end, {
         detail: this.eventData,
       })
     );
@@ -500,28 +512,6 @@ class Carousel {
    */
   get transition() {
     return this.el.style.getPropertyValue("--transition-property") !== "none";
-  }
-}
-
-class CarouselControls {
-  constructor(carousel) {
-    this.el = document.querySelector(SELECTORS.controls);
-    this.indicator = this.el.querySelector(SELECTORS.controlsIndicator);
-    this.carousel = carousel;
-    this.initListeners();
-  }
-
-  initListeners() {
-    this.back = this.el.querySelector(SELECTORS.btnBack);
-    this.back.addEventListener("click", () => this.carousel.back());
-    this.fwd = this.el.querySelector(SELECTORS.btnFwd);
-    this.fwd.addEventListener("click", () => this.carousel.fwd());
-    this.el.querySelectorAll(SELECTORS.btnGoto).forEach((b) => {
-      b.addEventListener("click", () => {
-        this.carousel.goto(parseInt(b.dataset.slide));
-      });
-    });
-    return this;
   }
 }
 

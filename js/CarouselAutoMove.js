@@ -50,18 +50,18 @@ class CarouselAutoMove {
    */
   initListeners() {
     this.carousel.el.addEventListener(
-      "slider-transitionbefore",
+      Carousel.EVENTS.before,
       this.stop.bind(this)
     );
-    this.carousel.el.addEventListener("slider-transitionend", () => {
+    this.carousel.el.addEventListener(Carousel.EVENTS.end, () => {
       (!this._hover || this.carousel.el.dataset.autoOnHover) && this.start();
     });
     this.carousel.el.addEventListener(
-      "slider-pointerenter",
+      CarouselPointer.EVENTS.enter,
       this.pointerEnter.bind(this)
     );
     this.carousel.el.addEventListener(
-      "slider-pointerleave",
+      CarouselPointer.EVENTS.leave,
       this.pointerLeave.bind(this)
     );
     return this;

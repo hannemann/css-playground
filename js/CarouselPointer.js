@@ -1,5 +1,15 @@
 class CarouselPointer {
   /**
+   * events thrown
+   */
+  static get EVENTS() {
+    return {
+      enter: "slider-pointerenter",
+      leave: "slider-pointerleave",
+    };
+  }
+
+  /**
    * add pointer support
    * @param {Carousel} carousel
    */
@@ -138,7 +148,7 @@ class CarouselPointer {
    */
   dispatchSliderEnter() {
     this.carousel.el.dispatchEvent(
-      new CustomEvent("slider-pointerenter", {
+      new CustomEvent(CarouselPointer.EVENTS.enter, {
         detail: this.carousel.eventData,
       })
     );
@@ -149,7 +159,7 @@ class CarouselPointer {
    */
   dispatchSliderLeave() {
     this.carousel.el.dispatchEvent(
-      new CustomEvent("slider-pointerleave", {
+      new CustomEvent(CarouselPointer.EVENTS.leave, {
         detail: this.carousel.eventData,
       })
     );
