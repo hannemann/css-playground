@@ -1,3 +1,6 @@
+import { Carousel } from "./index.js";
+import { CarouselPointer } from "./Pointer.js";
+
 /**
  * possible data attributes:
  * data-auto-interval
@@ -11,7 +14,7 @@
  * data-auto-dir
  *  auto movement direction, 'back'
  */
-class CarouselAutoMove {
+export class CarouselAutoMove {
   /**
    * @param {Carousel} carousel
    */

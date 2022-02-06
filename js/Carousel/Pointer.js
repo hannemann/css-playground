@@ -1,4 +1,6 @@
-class CarouselPointer {
+import { Carousel } from "./index.js";
+
+export class CarouselPointer {
   /**
    * events thrown
    */

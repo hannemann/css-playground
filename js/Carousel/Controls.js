@@ -1,8 +1,10 @@
-class CarouselControls {
+import { SELECTORS } from "./index.js";
+
+export class CarouselControls {
   constructor(carousel) {
-    this.el = document.querySelector(SELECTORS.controls);
-    this.indicator = this.el.querySelector(SELECTORS.controlsIndicator);
     this.carousel = carousel;
+    this.el = carousel.el.querySelector(SELECTORS.controls);
+    this.indicator = this.el.querySelector(SELECTORS.controlsIndicator);
     this.initListeners();
   }
 
