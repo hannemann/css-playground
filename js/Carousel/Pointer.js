@@ -93,8 +93,7 @@ export class CarouselPointer {
     if (!this.carousel.moving && this.pointerStart) {
       const delta = e.pageX - this.pointerStart;
       if (Math.abs(delta) > 0) {
-        this.carousel.dir =
-          delta > 0 ? Carousel.DIRECTIONS.back : Carousel.DIRECTIONS.fwd;
+        this.carousel.dir = Carousel.DIRECTIONS[delta > 0 ? "back" : "fwd"];
         this.carousel.setPrev().setNext();
         this.pxOffset = delta;
       }
@@ -108,20 +107,12 @@ export class CarouselPointer {
    */
   pointerUp(e) {
     e.preventDefault();
-    if (
-      !this.carousel.moving &&
-      this.carousel.slides[this.carousel.cur].style.transform !== ""
-    ) {
+    if (!this.carousel.moving && this.pxOffset) {
       this.carousel.moving = true;
       this.setRemainingDuration(e);
-      if (e.pageX - this.pointerStart > 0) {
-        this.carousel.dir = Carousel.DIRECTIONS.back;
-      } else {
-        this.carousel.dir = Carousel.DIRECTIONS.fwd;
-      }
-      this.carousel.slides[this.carousel.prev].style.transform = "";
-      this.carousel.slides[this.carousel.cur].style.transform = "";
-      this.carousel.slides[this.carousel.next].style.transform = "";
+      this.carousel.dir =
+        Carousel.DIRECTIONS[e.pageX - this.pointerStart > 0 ? "back" : "fwd"];
+      this.pxOffset = undefined;
       this.carousel.setCur().setPrev().setNext();
       this.carousel.dispatchTransitionStart();
     }
@@ -185,20 +176,35 @@ export class CarouselPointer {
    * @private
    */
   set pxOffset(px) {
-    // hint: prev and next exchange their position if direction changes
-    const offsetPrev =
-      this.carousel.dir === Carousel.DIRECTIONS.fwd ? -100 : 100;
-    const offsetNext =
-      this.carousel.dir === Carousel.DIRECTIONS.fwd ? 100 : -100;
-    this.carousel.slides[
-      this.carousel.prev
-    ].style.transform = `translateX(calc(${offsetPrev}% + (${px}px)))`;
-    this.carousel.slides[
-      this.carousel.cur
-    ].style.transform = `translateX(${px}px)`;
-    this.carousel.slides[
-      this.carousel.next
-    ].style.transform = `translateX(calc(${offsetNext}% + (${px}px)))`;
+    if (typeof px === "number") {
+      // hint: prev and next exchange their position if direction changes
+      const offsetPrev =
+        this.carousel.dir === Carousel.DIRECTIONS.fwd ? -100 : 100;
+      const offsetNext =
+        this.carousel.dir === Carousel.DIRECTIONS.fwd ? 100 : -100;
+      this.carousel.slides[
+        this.carousel.prev
+      ].style.transform = `translateX(calc(${offsetPrev}% + (${px}px)))`;
+      this.carousel.slides[
+        this.carousel.cur
+      ].style.transform = `translateX(${px}px)`;
+      this.carousel.slides[
+        this.carousel.next
+      ].style.transform = `translateX(calc(${offsetNext}% + (${px}px)))`;
+    } else {
+      this.carousel.slides[this.carousel.prev].style.transform = "";
+      this.carousel.slides[this.carousel.cur].style.transform = "";
+      this.carousel.slides[this.carousel.next].style.transform = "";
+    }
     this.dispatchOffsetChange(px);
+  }
+
+  /**
+   * obtain current px offset
+   * @private
+   */
+  get pxOffset() {
+    const style = getComputedStyle(this.carousel.slides[this.carousel.cur]);
+    return new DOMMatrix(style.getPropertyValue("transform")).m41;
   }
 }
