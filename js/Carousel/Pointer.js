@@ -130,7 +130,8 @@ export class CarouselPointer {
     const delta = Math.abs(this.pointerStart - e.pageX);
     const rest = this.carousel.slides[this.carousel.cur].offsetWidth - delta;
     const speed = delta / duration;
-    const restDuration = rest / speed;
+    // must be minimum of 1 animation frame to prevent transitionend event does not fire
+    const restDuration = Math.max(1000 / 60, Math.round(rest / speed));
     this.carousel.duration = Math.min(1000, Math.round(restDuration));
     this.carousel.timingFunction = "ease-out";
     delete this.pointerTime;

@@ -13,6 +13,8 @@ import { CarouselPointer } from "./Pointer.js";
  *  if truthy don't stop auto movement on hover
  * data-auto-dir
  *  auto movement direction, 'back'
+ * data-auto-pause
+ *  if truthy pause auto movement
  */
 export class CarouselAutoMove {
   /**
@@ -26,7 +28,7 @@ export class CarouselAutoMove {
 
   /**
    * initialize observers
-   * @returns {Carousel}
+   * @returns {CarouselAutoMove}
    * @private
    */
   initObserver() {
