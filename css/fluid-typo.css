@@ -1,0 +1,24 @@
+:root {
+  --gap: 1rem;
+}
+
+body {
+  background-color: gray;
+}
+
+main {
+  display: grid;
+  grid-auto-columns: 1fr;
+  grid-auto-flow: column;
+  background-color: lightslategray;
+  padding: var(--gap);
+  gap: var(--gap);
+  --item-count: 4;
+}
+
+main > * {
+  --opt-fs: calc(6vw / var(--item-count) + 1px);
+  background: lightsteelblue;
+  padding: var(--gap);
+  font-size: clamp(0.875rem, var(--opt-fs), 1.5rem);
+}
