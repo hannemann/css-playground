@@ -63,7 +63,7 @@ body {
   z-index: calc(var(--three) * 2);
 }
 
-.carousel.moving .slides .next {
+.carousel.moving .slides .next:not(:first-child):not(:last-child) {
   z-index: 1;
 }
 
