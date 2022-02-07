@@ -50,7 +50,23 @@ body {
   transform: translateX(calc(var(--move) * 100%));
 }
 
-.carousel.moving .slides .next,
-.carousel.moving .slides .cur {
+/**
+ * only apply a z-index of two if there are exactly three slides
+ */
+.carousel.moving .slides .prev {
+  /* calculate abs */
+  --abs: max(3 - var(--item-count), var(--item-count) - 3);
+  /* 1 if abs is not zero -> not exactly three slides */
+  --not-three: min(1, var(--abs));
+  /* 1 if not-three is zero -> exactly three slides */
+  --three: calc(1 - var(--not-three));
+  z-index: calc(var(--three) * 2);
+}
+
+.carousel.moving .slides .next {
   z-index: 1;
+}
+
+.carousel.moving .slides .cur {
+  z-index: 3;
 }

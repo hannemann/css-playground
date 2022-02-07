@@ -4,6 +4,9 @@
 
 body {
   background-color: gray;
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap);
 }
 
 main {
