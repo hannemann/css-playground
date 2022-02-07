@@ -22,8 +22,10 @@ export class CarouselAutoMove {
    */
   constructor(carousel) {
     this.carousel = carousel;
-    this.initObserver().initListeners();
-    this.start();
+    if (carousel.slides.length > 1) {
+      this.initObserver().initListeners();
+      this.start();
+    }
   }
 
   /**

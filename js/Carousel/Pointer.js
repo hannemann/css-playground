@@ -23,7 +23,9 @@ export class CarouselPointer {
    */
   constructor(carousel) {
     this.carousel = carousel;
-    this.initPointer();
+    if (this.carousel.slides.length > 1) {
+      this.initPointer();
+    }
   }
 
   /**

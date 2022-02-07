@@ -16,3 +16,8 @@ const ct = new Carousel(document.querySelector(".carousel-two"));
 new CarouselPointer(ct);
 new CarouselControls(ct);
 new CarouselAutoMove(ct);
+
+const co = new Carousel(document.querySelector(".carousel-one"));
+new CarouselPointer(co);
+new CarouselControls(co);
+new CarouselAutoMove(co);

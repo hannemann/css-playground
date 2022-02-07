@@ -1,17 +1,17 @@
 export const SELECTORS = {
-  slider: ":scope > .slides",
-  slides: ":scope > .slides > *",
+  slider: ":scope .slides",
+  slides: ":scope .slides > *",
   controls: ":scope .carousel-controls",
-  btnBack: ":scope > span:first-of-type",
-  btnFwd: ":scope > span:last-of-type",
-  btnGoto: ":scope > span.goto",
+  btnBack: ":scope > *:first-of-type",
+  btnFwd: ":scope > *:last-of-type",
+  btnGoto: ":scope > *.goto",
 };
 
 /**
  * possible data attributes:
  * data-current: set index of slide to move to
  * data-duration: set transition duration
- * data-timning-function: set transition timimg function
+ * data-timing-function: set transition timing function
  *
  * Minimal Structure:
  *
@@ -101,13 +101,16 @@ export class Carousel {
    */
   initSlides() {
     this.slider = this.el.querySelector(SELECTORS.slider);
+    /**
+     * @type {Array.<HTMLElement>}
+     */
     this.slides = Array.from(this.el.querySelectorAll(SELECTORS.slides));
     this.max = this.slides.length - 1;
-    this.el.style.setProperty("--item-count", this.slides.length);
+    this.el.style.setProperty("--item-count", this.slides.length.toString());
     this.prev = this.max;
     this.cur = 0;
     this.next = 1;
-    this.slides[this.next].classList.add(Carousel.CLASSNAMES.next);
+    this.slides[this.next]?.classList.add(Carousel.CLASSNAMES.next);
     this.slides[this.cur].classList.add(Carousel.CLASSNAMES.cur);
     this.max > 1 &&
       this.slides[this.prev].classList.add(Carousel.CLASSNAMES.prev);
@@ -143,7 +146,7 @@ export class Carousel {
    * @public
    */
   back() {
-    if (this.moving || this.count === 1) return;
+    if (this.moving || this.max === 0) return;
     this.dir = Carousel.DIRECTIONS.back;
     this.move();
   }
@@ -153,7 +156,7 @@ export class Carousel {
    * @public
    */
   fwd() {
-    if (this.moving || this.count === 1) return;
+    if (this.moving || this.max === 0) return;
     this.dir = Carousel.DIRECTIONS.fwd;
     this.move();
   }
@@ -164,7 +167,7 @@ export class Carousel {
    * @public
    */
   goto(n) {
-    if (this.moving || this.count === 1) return;
+    if (this.moving || this.max === 0) return;
     if (n !== this.cur) {
       this.dir =
         n > this.cur ? Carousel.DIRECTIONS.fwd : Carousel.DIRECTIONS.back;
@@ -207,7 +210,7 @@ export class Carousel {
 
   /**
    * move slides
-   * @private
+   * @public
    */
   move() {
     this.dispatchTransitionBefore();
@@ -231,7 +234,7 @@ export class Carousel {
   /**
    * determine the cur slide
    * @returns {Carousel}
-   * @private
+   * @public
    */
   setCur() {
     this.slides[this.cur].classList.remove(Carousel.CLASSNAMES.cur);
@@ -247,7 +250,7 @@ export class Carousel {
   /**
    * determine the next slide
    * @returns {Carousel}
-   * @private
+   * @public
    */
   setNext() {
     this.slides[this.next].classList.remove(Carousel.CLASSNAMES.next);
@@ -263,7 +266,7 @@ export class Carousel {
   /**
    * determine the prev slide
    * @returns {Carousel}
-   * @private
+   * @public
    */
   setPrev() {
     this.slides[this.prev].classList.remove(Carousel.CLASSNAMES.prev);
@@ -362,7 +365,7 @@ export class Carousel {
    * @param {Number} c
    */
   set prev(c) {
-    this.el.style.setProperty("--previous", c);
+    this.el.style.setProperty("--previous", c.toString());
   }
 
   /**
@@ -378,7 +381,7 @@ export class Carousel {
    * @param {Number} c
    */
   set cur(c) {
-    this.el.style.setProperty("--current", c);
+    this.el.style.setProperty("--current", c.toString());
   }
 
   /**
@@ -394,7 +397,7 @@ export class Carousel {
    * @param {Number} c
    */
   set next(c) {
-    this.el.style.setProperty("--next", c);
+    this.el.style.setProperty("--next", c.toString());
   }
 
   /**
@@ -402,7 +405,7 @@ export class Carousel {
    * @private
    */
   set dir(d) {
-    this.el.style.setProperty("--move", d);
+    this.el.style.setProperty("--move", d.toString());
   }
 
   /**
