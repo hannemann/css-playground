@@ -2,10 +2,12 @@ import { Carousel } from "./Carousel/index.js";
 import { CarouselControls } from "./Carousel/Controls.js";
 import { CarouselAutoMove } from "./Carousel/AutoMove.js";
 import { CarouselPointer } from "./Carousel/Pointer.js";
+import { CarouselYoutube } from "./Carousel/Youtube.js";
 
 const c = new Carousel(document.querySelector(".carousel"));
 new CarouselPointer(c);
 new CarouselControls(c);
+new CarouselYoutube(c);
 
 const ca = new Carousel(document.querySelector(".carousel-auto"));
 new CarouselPointer(ca);
