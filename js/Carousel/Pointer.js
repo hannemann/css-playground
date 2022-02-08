@@ -115,6 +115,7 @@ export class CarouselPointer {
    */
   pointerUp(e) {
     e.preventDefault();
+    this.carousel.transition = true;
     if (!this.carousel.moving && this.pxOffset) {
       this.carousel.moving = true;
       this.carousel.timingFunction = "ease-out";
@@ -135,7 +136,6 @@ export class CarouselPointer {
       this.carousel.dispatchTransitionStart();
     }
     this.pointerStart = null;
-    this.carousel.transition = true;
   }
 
   /**
