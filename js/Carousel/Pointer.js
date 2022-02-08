@@ -124,10 +124,13 @@ export class CarouselPointer {
         : 0;
       // moved at least by minDelta else bounce back
       if (Math.abs(delta) >= minDelta) {
-        this.carousel.dir = Carousel.DIRECTIONS[delta > 0 ? "back" : "fwd"];
         this.setRemainingDuration(e);
-        this.carousel.setCur().setPrev().setNext();
+        this.carousel.setCur();
+      } else {
+        // reverse direction and keep current
+        this.carousel.dir *= -1;
       }
+      this.carousel.setPrev().setNext();
       this.pxOffset = undefined;
       this.carousel.dispatchTransitionStart();
     }
@@ -207,9 +210,7 @@ export class CarouselPointer {
         this.carousel.next
       ].style.transform = `translateX(calc(${offsetNext}% + (${px}px)))`;
     } else {
-      this.carousel.slides[this.carousel.prev].style.transform = "";
-      this.carousel.slides[this.carousel.cur].style.transform = "";
-      this.carousel.slides[this.carousel.next].style.transform = "";
+      this.carousel.slides.forEach((s) => (s.style.transform = ""));
     }
     this.dispatchOffsetChange(px);
   }
