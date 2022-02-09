@@ -1,16 +1,19 @@
 import { Carousel } from "./index.js";
 
 const src = "https://www.youtube.com/iframe_api";
+let apiReady = false;
 
-let apiLoaded = new Promise((resolve, reject) => {
-  window.onYouTubeIframeAPIReady = function (e) {
+const apiLoaded = new Promise((resolve, reject) => {
+  document.addEventListener("carousel-yt-api-loaded", () => {
+    apiReady = true;
+    console.log("Api Loaded");
     resolve();
-  };
+  });
 });
 
-const script = document.createElement("script");
-script.src = src;
-document.querySelector(":root head").appendChild(script);
+window.onYouTubeIframeAPIReady = function () {
+  document.dispatchEvent(new CustomEvent("carousel-yt-api-loaded"));
+};
 
 export class CarouselYoutube {
   /**
@@ -24,7 +27,16 @@ export class CarouselYoutube {
 
   constructor(carousel) {
     this.carousel = carousel;
-    this.init();
+    this.initApi().init();
+  }
+
+  initApi() {
+    if (!apiReady) {
+      const script = document.createElement("script");
+      script.src = src;
+      document.querySelector(":root head").appendChild(script);
+    }
+    return this;
   }
 
   /**
