@@ -12,6 +12,7 @@ body {
   --duration: 250ms;
   --timing-function: ease-in-out;
   --transition-property: all;
+  --translate-amount: 100;
 }
 
 .slides {
@@ -40,7 +41,7 @@ body {
  * hence the second class selector 
  */
 .slides .prev.prev {
-  transform: translateX(calc(var(--move) * -100%));
+  transform: translateX(calc(var(--move) * var(--translate-amount) * -1%));
 }
 
 .slides .cur {
@@ -48,30 +49,10 @@ body {
 }
 
 .slides .next {
-  transform: translateX(calc(var(--move) * 100%));
+  transform: translateX(calc(var(--move) * var(--translate-amount) * 1%));
 }
 
-/**
- * only apply a z-index of two if there are exactly three slides
- */
-.carousel.moving .slides .prev {
-  /* calculate abs */
-  --abs: max(3 - var(--item-count), var(--item-count) - 3);
-  /* 1 if abs is not zero -> not exactly three slides */
-  --not-three: min(1, var(--abs));
-  /* 1 if not-three is zero -> exactly three slides */
-  --three: calc(1 - var(--not-three));
-  z-index: calc(var(--three) * 2);
-}
-
-.carousel.moving .slides .next:not(:first-child):not(:last-child) {
-  z-index: 1;
-}
-
-.carousel.moving .slides .cur {
-  z-index: 3;
-}
-
+/* snap next slide to its position except for there are only two slides */
 .carousel.moving .slides .next {
   /* calculate abs */
   --abs: max(2 - var(--item-count), var(--item-count) - 2);
