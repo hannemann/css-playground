@@ -6,7 +6,6 @@ let apiReady = false;
 const apiLoaded = new Promise((resolve, reject) => {
   document.addEventListener("carousel-yt-api-loaded", () => {
     apiReady = true;
-    console.log("Api Loaded");
     resolve();
   });
 });
