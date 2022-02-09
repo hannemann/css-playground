@@ -72,6 +72,16 @@ body {
   z-index: 3;
 }
 
+.carousel.moving .slides .next {
+  /* calculate abs */
+  --abs: max(2 - var(--item-count), var(--item-count) - 2);
+  /* 1 if abs is not zero -> not exactly two slides */
+  --not-two: min(1, var(--abs));
+  /* 1 if not-two is zero -> exactly two slides */
+  --two: calc(1 - var(--not-two));
+  transition-duration: calc(var(--duration) * var(--two));
+}
+
 .slides iframe[src*="//www.youtube.com/embed"],
 .slides iframe[src*="//www.youtube-nocookie.com/embed"]
 {
