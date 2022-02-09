@@ -15,7 +15,7 @@ window.onYouTubeIframeAPIReady = function () {
 };
 /**
  * possible data attributes:
- * data-no-autoplay: dont start video if cur is player
+ * data-autoplay: start video if cur is player
  */
 export class CarouselYoutube {
   /**
@@ -24,7 +24,7 @@ export class CarouselYoutube {
    * @private
    */
   static get iframeSelector() {
-    return 'iframe[src*="//www.youtube.com/embed"]';
+    return 'iframe[src*="//www.youtube.com/embed"], iframe[src*="//www.youtube-nocookie.com/embed"]';
   }
 
   constructor(carousel) {
@@ -132,6 +132,6 @@ export class CarouselYoutube {
   }
 
   get autoplay() {
-    return typeof this.carousel.el.dataset.noAutoplay === "undefined";
+    return typeof this.carousel.el.dataset.autoplay !== "undefined";
   }
 }
