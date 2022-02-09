@@ -336,6 +336,7 @@ export class Carousel {
    *
    * obtain event details object
    * @returns {SliderEventData}
+   * @public
    */
   get eventData() {
     return {

@@ -14,7 +14,10 @@ const apiLoaded = new Promise((resolve, reject) => {
 window.onYouTubeIframeAPIReady = function () {
   document.dispatchEvent(new CustomEvent("carousel-yt-api-loaded"));
 };
-
+/**
+ * possible data attributes:
+ * data-no-autoplay: dont start video if cur is player
+ */
 export class CarouselYoutube {
   /**
    * obtain iframe selector
@@ -61,10 +64,6 @@ export class CarouselYoutube {
         this.players[videoId] = new YT.Player(s, {
           videoId: videoId,
         });
-        const idx = this.carousel.slides.findIndex((i) => i.id === s.id);
-        this.carousel.slides[idx] = this.carousel.slider.querySelector(
-          `#${s.id}`
-        );
       });
     return this;
   }
@@ -79,6 +78,14 @@ export class CarouselYoutube {
       Carousel.EVENTS.end,
       this.handleSlideEnd.bind(this)
     );
+    this.carousel.slider.addEventListener(
+      "pointerdown",
+      (e) => (this.pointerStart = e.pageX)
+    );
+    this.carousel.slider.addEventListener(
+      "pointerup",
+      this.handleClick.bind(this)
+    );
   }
 
   /**
@@ -87,19 +94,33 @@ export class CarouselYoutube {
    */
   handleSlideEnd(e) {
     const cur = this.carousel.slides[e.detail.cur];
-    const tag = cur.tagName;
+    const p = cur.querySelector(CarouselYoutube.iframeSelector);
     let videoId;
     Object.values(this.players).forEach((p) => p.pauseVideo());
-    if (tag === "IFRAME" && cur.matches(CarouselYoutube.iframeSelector)) {
-      videoId = this.getVideoIdFromSrc(cur.src);
-    } else {
-      const p = cur.querySelector(CarouselYoutube.iframeSelector);
-      if (p) {
-        videoId = this.getVideoIdFromSrc(p.src);
+    if (p) {
+      videoId = this.getVideoIdFromSrc(p.src);
+      if (this.autoplay && videoId) {
+        this.players[videoId].playVideo();
       }
     }
-    if (videoId) {
-      this.players[videoId].playVideo();
+  }
+
+  handleClick(e) {
+    if (e.pageX !== this.pointerStart) return;
+    const data = this.carousel.eventData;
+    const cur = this.carousel.slides[data.cur];
+    const p = cur.querySelector(CarouselYoutube.iframeSelector);
+    let videoId;
+    Object.values(this.players).forEach((p) => p.pauseVideo());
+    if (p) {
+      videoId = this.getVideoIdFromSrc(p.src);
+      if (videoId) {
+        if (this.players[videoId].getPlayerState() === 1) {
+          this.players[videoId].pauseVideo();
+        } else {
+          this.players[videoId].playVideo();
+        }
+      }
     }
   }
 
@@ -109,5 +130,9 @@ export class CarouselYoutube {
    */
   getVideoIdFromSrc(src) {
     return src.split("?").shift().split("/").pop();
+  }
+
+  get autoplay() {
+    return typeof this.carousel.el.dataset.noAutoplay === "undefined";
   }
 }
