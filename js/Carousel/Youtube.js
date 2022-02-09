@@ -75,9 +75,19 @@ export class CarouselYoutube {
    */
   handleSlideEnd(e) {
     const cur = this.carousel.slides[e.detail.cur];
+    const tag = cur.tagName;
+    let videoId;
     Object.values(this.players).forEach((p) => p.pauseVideo());
-    if (cur.matches(CarouselYoutube.iframeSelector)) {
-      this.players[this.getVideoIdFromSrc(cur.src)].playVideo();
+    if (tag === "IFRAME" && cur.matches(CarouselYoutube.iframeSelector)) {
+      videoId = this.getVideoIdFromSrc(cur.src);
+    } else {
+      const p = cur.querySelector(CarouselYoutube.iframeSelector);
+      if (p) {
+        videoId = this.getVideoIdFromSrc(p.src);
+      }
+    }
+    if (videoId) {
+      this.players[videoId].playVideo();
     }
   }
 

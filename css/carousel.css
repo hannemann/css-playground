@@ -72,6 +72,7 @@ body {
   z-index: 3;
 }
 
-.slides .youtube {
+.slides iframe[src*="//www.youtube.com/embed"]
+{
   pointer-events: none;
 }
