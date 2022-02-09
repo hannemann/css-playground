@@ -14,6 +14,7 @@ body {
   --transition-property: all;
   --aspect-ratio-x: 16;
   --aspect-ratio-y: 9;
+  --visible: 1;
 }
 
 .slides {
@@ -25,13 +26,13 @@ body {
 }
 
 .slides > * {
-  width: 100%;
+  width: calc(100% / var(--visible));
   height: 100%;
   transition: var(--transition-property) var(--duration) var(--timing-function);
   position: absolute;
 }
 
-.slides > *:not(.prev):not(.cur):not(.next) {
+.slides > *:not(.prev):not(.cur):not(.next):not(.visible) {
   display: none;
 }
 
@@ -42,15 +43,24 @@ body {
  * hence the second class selector 
  */
 .slides .prev.prev {
-  transform: translateX(calc(var(--move) * -100%));
+  /* if move = -1 (back) with offset */
+  --multiplier: min(1, calc(var(--move) * var(--visible)));
+  --offset: max(1, var(--multiplier) * -1);
+  transform: translateX(calc(var(--move) * var(--offset) * -100%));
 }
 
 .slides .cur {
   transform: translateX(0);
 }
 
+.slides .visible {
+  transform: translateX(calc(var(--visible-slide) * 100%));
+}
+
 .slides .next {
-  transform: translateX(calc(var(--move) * 100%));
+  /* if move = 1 (fwd) with offset */
+  --offset: max(1, calc(var(--move) * var(--visible)));
+  transform: translateX(calc(var(--move) * var(--offset) * 100%));
 }
 
 /* snap next slide to its position except for there are only two slides */

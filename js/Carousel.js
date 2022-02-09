@@ -4,7 +4,12 @@ import { CarouselAutoMove } from "./Carousel/AutoMove.js";
 import { CarouselPointer } from "./Carousel/Pointer.js";
 import { CarouselYoutube } from "./Carousel/Youtube.js";
 
-const c = new Carousel(document.querySelector(".carousel"));
+const cm = new Carousel(document.querySelector(".carousel-multi"));
+// new CarouselPointer(cm);
+new CarouselControls(cm);
+// new CarouselYoutube(cm);
+
+const c = new Carousel(document.querySelector(".carousel-standard"));
 new CarouselPointer(c);
 new CarouselControls(c);
 new CarouselYoutube(c);

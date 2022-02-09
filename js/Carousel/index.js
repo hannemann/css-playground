@@ -37,6 +37,7 @@ export class Carousel {
       prev: "prev",
       cur: "cur",
       next: "next",
+      vis: "visible",
       moving: "moving",
     };
   }
@@ -58,8 +59,9 @@ export class Carousel {
    */
   constructor(el) {
     this.el = el;
+    this.visible = parseInt(this.el.dataset.visible || 1);
     this.initSlides();
-    if (this.slides.length > 1) {
+    if (this.slides.length > this.visible) {
       this.dir = Carousel.DIRECTIONS.fwd;
       this.initTimingFunction().initDuration().initObserver();
     }
@@ -108,12 +110,17 @@ export class Carousel {
     this.max = this.slides.length - 1;
     this.el.style.setProperty("--item-count", this.slides.length.toString());
     this.prev = this.max;
-    this.cur = 0;
-    this.next = 1;
-    this.slides[this.next]?.classList.add(Carousel.CLASSNAMES.next);
-    this.slides[this.cur].classList.add(Carousel.CLASSNAMES.cur);
     this.max > 1 &&
       this.slides[this.prev].classList.add(Carousel.CLASSNAMES.prev);
+    this.cur = 0;
+    this.slides[this.cur].classList.add(Carousel.CLASSNAMES.cur);
+    let i = 1;
+    for (i; i < this.visible && i < this.max; i++) {
+      this.slides[i]?.classList.add(Carousel.CLASSNAMES.vis);
+      this.slides[i]?.style.setProperty("--visible-slide", i.toString());
+    }
+    this.next = i;
+    this.slides[this.next]?.classList.add(Carousel.CLASSNAMES.next);
     return this;
   }
 
@@ -226,7 +233,7 @@ export class Carousel {
         });
       });
     } else {
-      this.setCur().setNext().setPrev();
+      this.setCur().setVis().setNext().setPrev();
       this.dispatchTransitionStart();
     }
   }
@@ -248,6 +255,26 @@ export class Carousel {
   }
 
   /**
+   * determine the visible slides
+   * @returns {Carousel}
+   * @public
+   */
+  setVis() {
+    this.slides.forEach((s) => {
+      s.classList.remove(Carousel.CLASSNAMES.vis);
+      s.style.setProperty("--visible-slide", "");
+    });
+    let vis = this.cur;
+    for (let i = 1; i < this.visible; i++) {
+      vis =
+        this.cur + i > this.max ? this.cur + i - 1 - this.max : this.cur + i;
+      this.slides[vis].classList.add(Carousel.CLASSNAMES.vis);
+      this.slides[vis].style.setProperty("--visible-slide", i);
+    }
+    return this;
+  }
+
+  /**
    * determine the next slide
    * @returns {Carousel}
    * @public
@@ -255,7 +282,10 @@ export class Carousel {
   setNext() {
     this.slides[this.next].classList.remove(Carousel.CLASSNAMES.next);
     if (this.dir === Carousel.DIRECTIONS.fwd) {
-      this.next = this.cur + 1 > this.max ? 0 : this.cur + 1;
+      this.next =
+        this.cur + this.visible > this.max
+          ? this.cur + this.visible - 1 - this.max
+          : this.cur + this.visible;
     } else {
       this.next = this.cur - 1 < 0 ? this.max : this.cur - 1;
     }
@@ -273,7 +303,10 @@ export class Carousel {
     if (this.dir === Carousel.DIRECTIONS.fwd) {
       this.prev = this.cur - 1 < 0 ? this.max : this.cur - 1;
     } else {
-      this.prev = this.cur + 1 > this.max ? 0 : this.cur + 1;
+      this.prev =
+        this.cur + this.visible > this.max
+          ? this.cur + this.visible - 1 - this.max
+          : this.cur + this.visible;
     }
     this.slides[this.prev].classList.add(Carousel.CLASSNAMES.prev);
     return this;
@@ -516,5 +549,22 @@ export class Carousel {
    */
   get transition() {
     return this.el.style.getPropertyValue("--transition-property") !== "none";
+  }
+
+  /**
+   * set number of visible slides
+   * @params {Number} m
+   * @private
+   */
+  set visible(m) {
+    this.el.style.setProperty("--visible", parseInt(m).toString());
+  }
+
+  /**
+   * obtain number of visible slides
+   * @private
+   */
+  get visible() {
+    return parseInt(this.el.style.getPropertyValue("--visible"), 10);
   }
 }
