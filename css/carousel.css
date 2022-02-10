@@ -18,7 +18,8 @@ body {
 }
 
 .slides {
-  aspect-ratio: var(--aspect-ratio-x) / var(--aspect-ratio-y);
+  aspect-ratio: calc(var(--aspect-ratio-x) * var(--visible)) /
+    var(--aspect-ratio-y);
   position: relative;
   overflow: hidden;
   z-index: 0;
