@@ -12,14 +12,12 @@ body {
   --duration: 250ms;
   --timing-function: ease-in-out;
   --transition-property: all;
-  --translate-amount: 100;
   --aspect-ratio-x: 16;
   --aspect-ratio-y: 9;
 }
 
 .slides {
-  aspect-ratio: calc(var(--aspect-ratio-x) * var(--visible)) /
-    var(--aspect-ratio-y);
+  aspect-ratio: var(--aspect-ratio-x) / var(--aspect-ratio-y);
   position: relative;
   overflow: hidden;
   z-index: 0;
@@ -44,7 +42,7 @@ body {
  * hence the second class selector 
  */
 .slides .prev.prev {
-  transform: translateX(calc(var(--move) * var(--translate-amount) * -1%));
+  transform: translateX(calc(var(--move) * -100%));
 }
 
 .slides .cur {
@@ -52,7 +50,7 @@ body {
 }
 
 .slides .next {
-  transform: translateX(calc(var(--move) * var(--translate-amount) * 1%));
+  transform: translateX(calc(var(--move) * 100%));
 }
 
 /* snap next slide to its position except for there are only two slides */
