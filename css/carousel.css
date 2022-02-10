@@ -13,10 +13,13 @@ body {
   --timing-function: ease-in-out;
   --transition-property: all;
   --translate-amount: 100;
+  --aspect-ratio-x: 16;
+  --aspect-ratio-y: 9;
 }
 
 .slides {
-  aspect-ratio: 16 / 9;
+  aspect-ratio: calc(var(--aspect-ratio-x) * var(--visible)) /
+    var(--aspect-ratio-y);
   position: relative;
   overflow: hidden;
   z-index: 0;
