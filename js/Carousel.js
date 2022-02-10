@@ -5,7 +5,7 @@ import { CarouselPointer } from "./Carousel/Pointer.js";
 import { CarouselYoutube } from "./Carousel/Youtube.js";
 
 const cm = new Carousel(document.querySelector(".carousel-multi"));
-// new CarouselPointer(cm);
+new CarouselPointer(cm);
 new CarouselControls(cm);
 // new CarouselYoutube(cm);
 

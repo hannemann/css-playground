@@ -100,9 +100,12 @@ export class CarouselPointer {
     e.preventDefault();
     if (!this.carousel.moving && this.pointerStart) {
       const delta = e.pageX - this.pointerStart;
-      if (Math.abs(delta) > 0) {
+      if (
+        Math.abs(delta) > 0 &&
+        Math.abs(delta) <= this.carousel.slides[this.carousel.cur].offsetWidth
+      ) {
         this.carousel.dir = Carousel.DIRECTIONS[delta > 0 ? "back" : "fwd"];
-        this.carousel.setPrev().setNext();
+        this.carousel.setPrev().setVis().setNext();
         this.pxOffset = delta;
       }
     }
@@ -131,7 +134,7 @@ export class CarouselPointer {
         // reverse direction and keep current
         this.carousel.dir *= -1;
       }
-      this.carousel.setPrev().setNext();
+      this.carousel.setPrev().setVis().setNext();
       this.pxOffset = undefined;
       this.carousel.dispatchTransitionStart();
     }
@@ -197,9 +200,13 @@ export class CarouselPointer {
     if (typeof px === "number") {
       // hint: prev and next exchange their position if direction changes
       const offsetPrev =
-        this.carousel.dir === Carousel.DIRECTIONS.fwd ? -100 : 100;
+        this.carousel.dir === Carousel.DIRECTIONS.fwd
+          ? -100
+          : this.carousel.visible * 100;
       const offsetNext =
-        this.carousel.dir === Carousel.DIRECTIONS.fwd ? 100 : -100;
+        this.carousel.dir === Carousel.DIRECTIONS.fwd
+          ? this.carousel.visible * 100
+          : -100;
       this.carousel.slides[
         this.carousel.prev
       ].style.transform = `translateX(calc(${offsetPrev}% + (${px}px)))`;
@@ -209,6 +216,11 @@ export class CarouselPointer {
       this.carousel.slides[
         this.carousel.next
       ].style.transform = `translateX(calc(${offsetNext}% + (${px}px)))`;
+      this.carousel.slides.forEach((s) => {
+        if (s.classList.contains(Carousel.CLASSNAMES.vis)) {
+          s.style.transform = `translateX(calc(var(--visible-slide) * 100% + ${px}px))`;
+        }
+      });
     } else {
       this.carousel.slides.forEach((s) => (s.style.transform = ""));
     }
