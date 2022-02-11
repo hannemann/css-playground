@@ -1,4 +1,9 @@
-import { SELECTORS } from "./index.js";
+export const SELECTORS = {
+  controls: ":scope .carousel-controls",
+  btnBack: ":scope > *:first-of-type",
+  btnFwd: ":scope > *:last-of-type",
+  btnGoto: ":scope > *.goto",
+};
 
 export class CarouselControls {
   constructor(carousel) {

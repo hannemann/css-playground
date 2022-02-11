@@ -16,6 +16,7 @@ export class CarouselPointer {
     return {
       enter: "slider-pointerenter",
       leave: "slider-pointerleave",
+      offsetChange: "slider-offsetchange",
     };
   }
 
@@ -224,7 +225,7 @@ export class CarouselPointer {
    */
   dispatchOffsetChange(offset) {
     this.carousel.el.dispatchEvent(
-      new CustomEvent("slider-offsetchange", {
+      new CustomEvent(CarouselPointer.EVENTS.offsetChange, {
         detail: Object.assign(this.carousel.eventData, { offset }),
       })
     );

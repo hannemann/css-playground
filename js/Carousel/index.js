@@ -1,10 +1,6 @@
 export const SELECTORS = {
   slider: ":scope .slides",
   slides: ":scope .slides > *",
-  controls: ":scope .carousel-controls",
-  btnBack: ":scope > *:first-of-type",
-  btnFwd: ":scope > *:last-of-type",
-  btnGoto: ":scope > *.goto",
 };
 
 /**
@@ -21,6 +17,7 @@ export class Carousel {
   /**
    * numeric representation of possible directions
    * used to calculate offset of prev and next slides in css
+   * @returns {Object.<string, number>}
    */
   static get DIRECTIONS() {
     return {
@@ -31,6 +28,7 @@ export class Carousel {
 
   /**
    * utilized classnames
+   * @returns {Object.<string, string>}
    */
   static get CLASSNAMES() {
     return {
@@ -44,6 +42,7 @@ export class Carousel {
 
   /**
    * events thrown
+   * @returns {Object.<string, string>}
    */
   static get EVENTS() {
     return {
@@ -510,7 +509,7 @@ export class Carousel {
    * @private
    */
   get duration() {
-    return parseInt(this.el.style.getPropertyValue("--duration"), 10);
+    return parseInt(this.el.style.getPropertyValue("--duration"));
   }
 
   /**
@@ -565,6 +564,6 @@ export class Carousel {
    * @private
    */
   get visible() {
-    return parseInt(this.el.style.getPropertyValue("--visible"), 10);
+    return parseInt(this.el.style.getPropertyValue("--visible"));
   }
 }
