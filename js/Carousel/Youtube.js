@@ -46,7 +46,34 @@ export class CarouselYoutube {
    */
   async init() {
     await apiLoaded;
-    this.initPlayers().initListeners();
+    this.initAutoplay().initObserver().initPlayers().initListeners();
+  }
+
+  /**
+   * initialize autoplay
+   * @returns {CarouselYoutube}
+   */
+  initAutoplay() {
+    this.autoplay = typeof this.carousel.el.dataset.autoplay !== "undefined";
+    return this;
+  }
+
+  /**
+   * initialize observers
+   * @returns {CarouselYoutube}
+   * @private
+   */
+  initObserver() {
+    this.observer = new MutationObserver((mutations) => {
+      mutations.forEach((m) => {
+        if (m.attributeName === "data-autoplay") {
+          this.initAutoplay();
+        }
+      });
+    });
+
+    this.observer.observe(this.carousel.el, { attributes: true });
+    return this;
   }
 
   /**
@@ -131,7 +158,20 @@ export class CarouselYoutube {
     return src.split("?").shift().split("/").pop();
   }
 
+  /**
+   * obtain autoplay state
+   * @return {Boolean}
+   */
   get autoplay() {
-    return typeof this.carousel.el.dataset.autoplay !== "undefined";
+    const autoPlay = this.carousel.el.style.getPropertyValue("--autoplay");
+    return autoPlay === "1";
+  }
+
+  /**
+   * set autoplay state
+   * @private
+   */
+  set autoplay(a) {
+    this.carousel.el.style.setProperty("--autoplay", a === true ? 1 : 0);
   }
 }
