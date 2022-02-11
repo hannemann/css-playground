@@ -3,12 +3,14 @@ import { Carousel } from "./index.js";
 /**
  * possible data attributes:
  * data-snap
- *  0|range 2,10 movement must be greater than width divided by snap
- *  if not slide bounces back. Default: 6 (20%) 0 disables
+ *  range 0,10 movement must be greater than
+ *  width divided by 12 - snap (max. 200px)
+ *  if not slide bounces back. Default: 4 (25%) 0 disables
  */
 export class CarouselPointer {
   /**
    * events thrown
+   * @returns {Object.<string, string>}
    */
   static get EVENTS() {
     return {
@@ -18,14 +20,54 @@ export class CarouselPointer {
   }
 
   /**
+   * default snap divisor
+   * @returns {Number}
+   */
+  get defaultSnap() {
+    return 4;
+  }
+
+  /**
    * add pointer support
    * @param {Carousel} carousel
    */
   constructor(carousel) {
     this.carousel = carousel;
     if (this.carousel.slides.length > 1) {
-      this.initPointer();
+      this.initSnap().initObserver().initPointer();
     }
+  }
+
+  /**
+   * initialize snap divisor
+   * @returns {CarouselPointer}
+   */
+  initSnap() {
+    const d = parseInt(this.carousel.el.dataset.snap);
+    if (!isNaN(d)) {
+      this.snap = d === 0 ? 0 : Math.max(2, Math.min(10, d));
+    } else {
+      this.snap = this.defaultSnap;
+    }
+    return this;
+  }
+
+  /**
+   * initialize observers
+   * @returns {CarouselPointer}
+   * @private
+   */
+  initObserver() {
+    this.observer = new MutationObserver((mutations) => {
+      mutations.forEach((m) => {
+        if (m.attributeName === "data-snap") {
+          this.initSnap();
+        }
+      });
+    });
+
+    this.observer.observe(this.carousel.el, { attributes: true });
+    return this;
   }
 
   /**
@@ -123,11 +165,8 @@ export class CarouselPointer {
       this.carousel.moving = true;
       this.carousel.timingFunction = "ease-out";
       const delta = e.pageX - this.pointerStart;
-      const minDelta = this.snap
-        ? this.carousel.slides[this.carousel.cur].offsetWidth / this.snap
-        : 0;
       // moved at least by minDelta else bounce back
-      if (Math.abs(delta) >= minDelta) {
+      if (Math.abs(delta) >= this.minDelta) {
         this.setRemainingDuration(e);
         this.carousel.setCur();
       } else {
@@ -241,10 +280,29 @@ export class CarouselPointer {
    * @return {Number}
    */
   get snap() {
-    const d = parseInt(this.carousel.el.dataset.snap);
-    if (!isNaN(d)) {
-      return d === 0 ? 0 : Math.max(2, Math.min(10, d));
+    const s = parseInt(this.carousel.el.style.getPropertyValue("--snap"));
+    if (!isNaN(s)) {
+      return Math.max(0, Math.min(10, s));
     }
-    return 6;
+    return this.defaultSnap;
+  }
+
+  /**
+   * set snap divisor
+   * @private
+   */
+  set snap(s) {
+    this.carousel.el.style.setProperty("--snap", parseInt(s).toString());
+  }
+
+  /**
+   * obtain min movement to prevent bounce back
+   */
+  get minDelta() {
+    const snap = this.snap;
+    const minDelta = snap
+      ? this.carousel.slides[this.carousel.cur].offsetWidth / (12 - snap)
+      : 0;
+    return Math.min(minDelta, 200);
   }
 }
