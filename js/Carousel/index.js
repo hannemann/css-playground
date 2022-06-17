@@ -174,6 +174,7 @@ export class Carousel {
    */
   goto(n) {
     if (this.moving || this.max === 0) return;
+    if (n < 0 || n > this.max) return;
     if (n !== this.cur) {
       this.dir =
         n > this.cur ? Carousel.DIRECTIONS.fwd : Carousel.DIRECTIONS.back;
