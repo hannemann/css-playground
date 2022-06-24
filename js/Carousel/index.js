@@ -3,6 +3,10 @@ export const SELECTORS = {
   slides: ":scope .slides > *",
 };
 
+const CSS_PROPERTY_TRANSITION_TIMING_FUNCTION = "transition-timing-function";
+
+const DEFAULT_TIMING_FUNCTION = "ease-in-out";
+
 /**
  * possible data attributes:
  * data-current: set index of slide to move to
@@ -72,7 +76,7 @@ export class Carousel {
    */
   initDuration() {
     let duration = parseInt(this.el.dataset.duration);
-    duration = typeof duration === "number" && duration > 0 ? duration : 250;
+    duration = duration > 0 ? duration : 250;
     this.duration = this.defaultDuration = duration;
     return this;
   }
@@ -82,16 +86,24 @@ export class Carousel {
    * @returns {Carousel}
    */
   initTimingFunction() {
-    const property = "transition-timing-function";
     const timingFunction = this.el.dataset.timingFunction;
-    const old = this.el.style.getPropertyValue(property);
-    this.el.style.setProperty(property, timingFunction);
-    if (timingFunction === this.el.style.getPropertyValue(property)) {
+    const old = this.el.style.getPropertyValue(
+      CSS_PROPERTY_TRANSITION_TIMING_FUNCTION
+    );
+    this.el.style.setProperty(
+      CSS_PROPERTY_TRANSITION_TIMING_FUNCTION,
+      timingFunction
+    );
+    if (
+      timingFunction ===
+      this.el.style.getPropertyValue(CSS_PROPERTY_TRANSITION_TIMING_FUNCTION)
+    ) {
       this.timingFunction = this.defaultTimingFunction = timingFunction;
     } else {
-      this.timingFunction = this.defaultTimingFunction = "ease-in-out";
+      this.timingFunction = this.defaultTimingFunction =
+        DEFAULT_TIMING_FUNCTION;
     }
-    this.el.style.setProperty(property, old);
+    this.el.style.setProperty(CSS_PROPERTY_TRANSITION_TIMING_FUNCTION, old);
     return this;
   }
 
