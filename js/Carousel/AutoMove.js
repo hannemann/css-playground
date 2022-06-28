@@ -1,4 +1,4 @@
-import { Carousel } from "./index.js";
+import { Carousel, DEFAULT_TIMING_FUNCTION } from "./index.js";
 import { CarouselPointer } from "./Pointer.js";
 
 /**
@@ -103,7 +103,7 @@ export class CarouselAutoMove {
    * @private
    */
   start() {
-    if (this.interval && !this.paused && !this.carousel.moving) {
+    if (!this.paused && !this.carousel.moving) {
       this.stop();
       this._autoSlideInterval = setTimeout(() => {
         if (!this.paused && !this.carousel.moving) {
@@ -136,7 +136,7 @@ export class CarouselAutoMove {
    */
   get interval() {
     const i = parseInt(this.carousel.el.dataset.autoInterval);
-    return typeof i === "number" && i > 0 ? i : 5000;
+    return i > 0 ? i : 5000;
   }
 
   /**
@@ -145,7 +145,7 @@ export class CarouselAutoMove {
    */
   get duration() {
     const d = parseInt(this.carousel.el.dataset.autoDuration);
-    return typeof d === "number" && d > 0 ? d : 1000;
+    return d > 0 ? d : 1000;
   }
 
   /**
@@ -153,17 +153,24 @@ export class CarouselAutoMove {
    * @returns {String}
    */
   get timingFunction() {
-    const property = "transition-timing-function";
     let timingFunction = this.carousel.el.dataset.autoTimingFunction;
-    const old = this.carousel.el.style.getPropertyValue(property);
-    this.carousel.el.style.setProperty(property, timingFunction);
-    if (timingFunction !== this.carousel.el.style.getPropertyValue(property)) {
+    const old = this.carousel.el.style.getPropertyValue(
+      DEFAULT_TIMING_FUNCTION
+    );
+    this.carousel.el.style.setProperty(DEFAULT_TIMING_FUNCTION, timingFunction);
+    if (
+      timingFunction !==
+      this.carousel.el.style.getPropertyValue(DEFAULT_TIMING_FUNCTION)
+    ) {
       timingFunction = "ease-in-out";
     }
-    this.carousel.el.style.setProperty(property, old);
+    this.carousel.el.style.setProperty(DEFAULT_TIMING_FUNCTION, old);
     return timingFunction;
   }
 
+  /**
+   * obtain paused status
+   */
   get paused() {
     return typeof this.carousel.el.dataset.autoPause !== "undefined";
   }

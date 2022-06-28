@@ -5,7 +5,7 @@ export const SELECTORS = {
 
 const CSS_PROPERTY_TRANSITION_TIMING_FUNCTION = "transition-timing-function";
 
-const DEFAULT_TIMING_FUNCTION = "ease-in-out";
+export const DEFAULT_TIMING_FUNCTION = "ease-in-out";
 
 /**
  * possible data attributes:
