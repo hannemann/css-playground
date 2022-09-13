@@ -1,0 +1,66 @@
+:root {
+    --grid-col-width: 93px;
+    --grid-gap-width: 30px;
+    --page-width: calc(var(--grid-col-width) * 12 + var(--grid-gap-width) * 11);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.hero {
+    width: min(100vw, var(--page-width));
+    margin: auto;
+    display: grid;
+    gap: var(--grid-gap-width);
+    grid-template-rows:
+        auto
+        auto
+        30px
+        min-content
+        min-content
+        30px;
+    grid-template-columns: repeat(12, minmax(var(--grid-col-width), 1fr));
+    isolation:isolate;
+}
+
+.hero::before {
+    content: "";
+    grid-column: 1 / -1;
+    grid-row: 1;
+    height: var(--grid-col-width);
+}
+
+.hero::after {
+    content: "";
+    background-image: linear-gradient(120deg, blue 0%, magenta 100%);
+    z-index: -1;
+    margin-inline: calc((100vw - min(100vw, var(--page-width))) / 2 * -1);
+    margin-block-end: calc(var(--grid-gap-width) / 2 * -1);
+    grid-column: 1 / -1;
+    grid-row: 1 / -3;
+
+}
+
+.img {
+    grid-column: 1 / -2;
+    grid-row: 2 / span 2;
+    max-width: 100%;
+}
+
+.img img {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: cover;
+}
+
+.title {
+    color: white;
+    grid-column: 3 / -1;
+    grid-row: 3 / span 4;
+    background-color: orange;
+    padding: 3rem;
+}
