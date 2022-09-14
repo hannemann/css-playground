@@ -1,0 +1,54 @@
+/* Triade */
+
+:root {
+  --clr-triade-hue: 180;
+  --clr-triade-sat: 69;
+  --clr-triade-value: 87;
+}
+
+.triade {
+  display: flex;
+}
+
+.triade div {
+  width: 100px;
+  height: 100px;
+
+  /* https://en.wikipedia.org/wiki/HSL_and_HSV#HSV_to_HSL */
+  --lit: calc(var(--value) * (1 - (var(--sat) / 100 / 2)));
+  --sat: calc(var(--value) - var(--lit) / min(var(--lit), 100 - var(--lit)));
+
+  background-color: hsl(
+    var(--hue) calc(1% * var(--sat)) calc(1% * var(--lit)) / 1
+  );
+}
+
+.triade div:nth-child(1) {
+  --hue: var(--clr-triade-hue);
+  --sat: calc(var(--clr-triade-sat) + 10);
+  --value: calc(var(--clr-triade-value) - 30);
+}
+
+.triade div:nth-child(2) {
+  --hue: calc(var(--clr-triade-hue) + 135);
+  --sat: calc(var(--clr-triade-sat) - 10);
+  --value: var(--clr-triade-value);
+}
+
+.triade div:nth-child(3) {
+  --hue: var(--clr-triade-hue);
+  --sat: var(--clr-triade-sat);
+  --value: var(--clr-triade-value);
+}
+
+.triade div:nth-child(4) {
+  --hue: calc(var(--clr-triade-hue) - 135);
+  --sat: calc(var(--clr-triade-sat) + 10);
+  --value: var(--clr-triade-value);
+}
+
+.triade div:nth-child(5) {
+  --hue: calc(var(--clr-triade-hue) - 135);
+  --sat: calc(var(--clr-triade-sat) + 5);
+  --value: calc(var(--clr-triade-value) - 30);
+}
