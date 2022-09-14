@@ -22,8 +22,8 @@
         min-content
         min-content
         30px;
-    grid-template-columns: repeat(12, minmax(var(--grid-col-width), 1fr));
-    isolation:isolate;
+    grid-template-columns: repeat(12, 1fr);
+    isolation: isolate;
 }
 
 .hero::before {
@@ -41,7 +41,6 @@
     margin-block-end: calc(var(--grid-gap-width) / 2 * -1);
     grid-column: 1 / -1;
     grid-row: 1 / -3;
-
 }
 
 .img {
