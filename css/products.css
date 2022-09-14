@@ -56,7 +56,6 @@ article.product.big {
   background-color: blueviolet;
 }
 
-/* 2 * tile min-width + gap-width + 2 * main-padding: 2 * 200 + 16 + 2 * 16 */
 @media (min-width: 448px) {
   article.product.wide {
     grid-column: span 2;
@@ -67,7 +66,7 @@ article.product.big {
     grid-row: span 2;
   }
 }
-/* 2 * tile min-width + gap-width + 2 * main-padding + nav-width: 2 * 200 + 16 + 2 * 16 + 250 */
+
 @media (min-width: 698px) {
   body {
     grid-template-columns: var(--nav-width) 1fr;
