@@ -1,0 +1,30 @@
+section div {
+    display: grid;
+    place-content: center;
+    height: 100px;
+    background: maroon;
+    font-size: 30px;
+}
+
+body {
+    display: grid;
+    gap: 4rem;
+}
+
+section {
+    display: grid;
+    gap: 2rem;
+    color: white;
+}
+
+.auto-fit {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+}
+
+.auto-fill {
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+}
+
+.auto-fill div {
+    background: midnightblue;
+}
