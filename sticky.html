@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Document</title>
+
+        <style>
+            * {
+                margin: 0;
+                padding: 0;
+            }
+
+            body {
+                display: grid;
+                grid-template-areas: "header header header" ". main ." "footer footer footer";
+                min-height: 100vh;
+                position: relative;
+            }
+
+            header {
+                grid-area: header;
+                height: 100px;
+                background: black;
+                color: white;
+                display: grid;
+                place-content: center;
+                position: sticky;
+                top: 0;
+            }
+
+            main {
+                grid-area: main;
+                margin-inline: auto;
+                max-width: 45rem;
+                padding: 1rem;
+                background-color: lightgray;
+                display: grid;
+                gap: 2.5rem;
+            }
+
+            section {
+                background: lightblue;
+                bottom: 0;
+            }
+
+            section.is-sticky {
+                position: fixed;
+                bottom: 0;
+                width: 100%;
+            }
+
+            section.sticky-cta {
+                position: fixed;
+                bottom: 0;
+                width: 100%;
+                max-height: 0;
+                transform: scaleY(0);
+                transform-origin: bottom;
+                transition: max-height 250ms ease-in-out,
+                    transform 250ms ease-in-out;
+            }
+
+            section.sticky-cta.is-sticky {
+                max-height: 100px;
+                transform: scaleY(1);
+            }
+
+            footer {
+                grid-area: footer;
+                background: black;
+                height: 400px;
+                color: white;
+            }
+        </style>
+    </head>
+    <body>
+        <header>
+            <h1>A Header that stays...</h1>
+        </header>
+        <main>
+            <h2>Lots of content</h2>
+            <p>
+                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ad
+                mollitia itaque ipsam, similique sapiente obcaecati tempore! Eum
+                perspiciatis laudantium quia cum repellendus quae voluptas ut
+                esse consequatur labore officia, assumenda reprehenderit
+                delectus magnam ratione mollitia nemo obcaecati vitae
+                reiciendis, hic quidem facilis consequuntur ab repellat.
+                Excepturi iste, fuga aut corrupti accusantium nostrum impedit
+                corporis quis odio sit fugiat suscipit dolorum hic provident, ad
+                consequatur in? Iusto natus illum mollitia nesciunt illo? Labore
+                dolorum eveniet quibusdam nulla sequi. Distinctio fugiat nemo
+                tenetur excepturi, voluptatem praesentium non explicabo
+                molestiae necessitatibus. Harum dolorum ad quas hic non amet
+                tempora dignissimos corrupti tempore laudantium. Cum, dicta
+                natus. Qui eum pariatur soluta, maxime, nesciunt mollitia,
+                dolore reprehenderit alias eaque eveniet iusto doloremque. Id
+                sint odio doloremque, maiores maxime quia pariatur nihil, totam
+                at enim asperiores, laudantium tempora impedit quibusdam rem
+                veniam iste illum quam repudiandae quasi molestias deserunt
+                sunt! Quia commodi soluta in et ducimus?
+            </p>
+            <p>
+                Iure sapiente architecto mollitia laudantium tempore illum
+                blanditiis culpa doloremque hic ad repellat fugiat, fugit iusto
+                molestias! Porro dolorum enim veniam in quod deleniti ipsa
+                nulla, hic eum dicta quasi consectetur explicabo aliquam facilis
+                distinctio, beatae nam suscipit! Omnis, dolore? Cupiditate quod
+                eos molestiae dicta maiores ipsa nesciunt tenetur ullam beatae,
+                impedit laboriosam quibusdam? Fugiat porro placeat saepe nihil
+                culpa dolorem consectetur animi. Recusandae architecto quia
+                amet, itaque dignissimos asperiores aliquid beatae nemo quidem
+                ducimus vitae aspernatur iure officia consectetur obcaecati
+                dolores, provident eum, perspiciatis optio explicabo. Dolorem
+                inventore, amet autem rerum at perspiciatis adipisci in minus
+                corporis tempore eveniet magnam nesciunt eos. Aperiam cum
+                libero, ducimus illo quaerat eos rem necessitatibus, facere
+                recusandae aliquid maxime beatae delectus iusto impedit
+                nesciunt, nobis molestias dolore obcaecati id praesentium autem?
+                Cum qui incidunt dignissimos pariatur cumque quos quo id
+                consequatur earum sapiente neque recusandae beatae architecto
+                atque sed voluptas, laboriosam eligendi omnis?
+            </p>
+            <section class="sticky" data-target=".sticky-cta">
+                <h2>Wanna be Sticky</h2>
+            </section>
+            <p>
+                At ullam, quisquam officia rerum ipsa illo tenetur, recusandae
+                fugit eaque esse ipsam veritatis quibusdam corrupti cumque sequi
+                quas consequatur illum quo architecto quasi reprehenderit!
+                Dolorem laborum nam fugit necessitatibus nisi quos ullam.
+                Corrupti eligendi maxime cumque tempore voluptate quos animi
+                odio soluta, labore eveniet porro temporibus quidem possimus
+                itaque velit expedita laboriosam optio debitis blanditiis
+                nostrum corporis nobis dolores? Vitae dicta ipsa possimus, cum
+                voluptates, iusto at minus repudiandae blanditiis in itaque
+                doloribus? Excepturi, reiciendis optio. Perferendis quae
+                corporis beatae debitis tempore praesentium distinctio quas,
+                sequi quibusdam incidunt excepturi rerum sint eum explicabo
+                voluptas cum sunt sit ex deserunt placeat nihil ratione qui
+                veritatis. Inventore commodi accusantium minima debitis modi?
+                Ipsa praesentium officiis vero hic excepturi nisi quas
+                consequatur animi cum earum in, veniam facilis nostrum et
+                accusantium maxime! Repellendus corrupti odit aliquid inventore
+                repellat dicta ad expedita! Veniam, dolorum eius eaque aperiam
+                culpa incidunt eos doloremque ullam id!
+            </p>
+            <p>
+                Dolorum optio fugiat laboriosam id magni aut quos! Officia, quis
+                autem aliquid aperiam, ratione tenetur commodi accusamus
+                voluptatum sequi nam aliquam, a repudiandae molestiae atque in.
+                Eius nesciunt officia porro reprehenderit, necessitatibus
+                voluptatem obcaecati quam minus dolorum delectus facilis
+                doloremque nam quia recusandae voluptatibus soluta velit commodi
+                ea harum modi similique veritatis culpa numquam facere. Eius,
+                praesentium provident nemo est quia perferendis ullam corrupti
+                dolorum cumque repellat, vero eos at debitis quisquam cum quae
+                consectetur earum dolore distinctio voluptas nesciunt odio.
+                Voluptatibus porro nulla nemo, est unde, sit voluptatum
+                exercitationem voluptate iusto esse perspiciatis vitae
+                consequuntur tenetur perferendis, iste velit deserunt non
+                aperiam. Ab consequuntur asperiores, quae inventore doloremque
+                consequatur laudantium soluta ex cupiditate animi molestiae
+                eaque et suscipit reiciendis omnis corrupti sed architecto
+                maxime alias ad officia? Labore, ducimus facilis non architecto
+                reiciendis, perspiciatis temporibus dicta beatae, amet ipsam
+                modi magnam deserunt corrupti ipsum qui. Natus obcaecati ea
+                animi?
+            </p>
+            <p>
+                Esse adipisci quisquam et inventore mollitia quas, facilis fugit
+                quaerat rerum laboriosam sit doloremque id porro quidem quo
+                unde, cumque eveniet dolore cupiditate? Saepe consequuntur quia
+                necessitatibus, ratione voluptate unde veniam enim perspiciatis,
+                quidem, aperiam beatae ducimus. Animi nulla, facere atque error
+                ullam impedit eligendi tenetur inventore, quae nihil ad
+                voluptate eveniet aliquid odio qui earum corporis voluptas sed
+                doloribus in exercitationem repellendus. Consequatur mollitia
+                eos perferendis rerum unde, saepe iure eius fugiat officia
+                tempore sequi. Quas sint obcaecati rerum? Numquam fuga nostrum
+                totam hic eaque voluptas minima ut consequuntur ipsam!
+                Repellendus cupiditate consectetur neque eius facilis vitae odit
+                laborum amet autem nulla. Ea maiores quia fugit culpa tenetur ad
+                suscipit, aut nam aspernatur possimus iusto explicabo sapiente
+                sunt excepturi officiis assumenda facilis laboriosam, voluptatem
+                fugiat reprehenderit ab? Cupiditate minus magni aut delectus
+                nihil fugiat facere, quis consequatur, iure quibusdam odit
+                placeat rerum beatae a. Cupiditate molestias pariatur veniam
+                reiciendis.
+            </p>
+        </main>
+        <footer>this is at the bottom</footer>
+        <section class="sticky-cta"><h2>I am the sticky one!</h2></section>
+        <script>
+            const sticky = document.querySelector(".sticky");
+            const target = document.querySelector(sticky.dataset.target);
+            window.addEventListener("scroll", () => {
+                const isSticky =
+                    matchMedia("(orientation: portrait)").matches &&
+                    sticky.offsetTop - window.scrollY < 0;
+
+                target.classList.toggle("is-sticky", isSticky);
+            });
+        </script>
+    </body>
+</html>
