@@ -1,0 +1,67 @@
+:root {
+    --scroller-cell-dimension-x: 1fr;
+    --scroller-cell-dimension-y: 1fr;
+    --scroll-padding-inline-start: 0;
+    --scroll-padding-inline-end: 0;
+    --scroll-padding-block-start: 0;
+    --scroll-padding-block-end: 0;
+    --scroller-snap-align: start;
+    --scroller-snap-align-last-item: end;
+}
+.scroller {
+    --snap-direction: inline;
+    --grid-flow: column;
+    --overflow-x: auto;
+    --overflow-y: none;
+    --scroller-row-height: auto;
+    --scroller-column-width: var(--scroller-cell-dimension-x);
+    --scroll-snap-stop: always;
+}
+
+.scroller.block {
+    --snap-direction: block;
+    --grid-flow: row;
+    --overflow-x: none;
+    --overflow-y: auto;
+    --scroller-column-width: auto;
+    --scroller-row-height: var(--scroller-cell-dimension-x);
+}
+
+.scroller {
+    display: grid;
+    gap: var(--gap);
+    grid-auto-columns: var(--scroller-column-width);
+    grid-auto-flow: var(--grid-flow);
+    grid-auto-rows: var(--scroller-row-height);
+    overflow-x: var(--overflow-x);
+    overflow-y: var(--overflow-y);
+    overscroll-behavior-inline: contain;
+}
+
+.scroller.snap {
+    scroll-padding-inline: var(--scroll-padding-inline-start)
+        var(--scroll-padding-inline-end);
+    scroll-snap-type: var(--snap-direction) mandatory;
+}
+
+.scroller.snap > * {
+    scroll-snap-align: var(--scroller-snap-align);
+    scroll-snap-stop: var(--scroll-snap-stop);
+}
+
+.scroller.snap > :last-child {
+    scroll-snap-align: var(--scroller-snap-align-last-item);
+}
+
+.scroller.block.snap {
+    scroll-padding-block: var(--scroll-padding-block-start)
+        var(--scroll-padding-block-end);
+}
+
+.scroller:not(.with-scrollbar) {
+    scrollbar-width: none;
+}
+
+.scroller:not(.with-scrollbar)::-webkit-scrollbar {
+    display: none;
+}

@@ -1,0 +1,88 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    display: grid;
+    grid-template-areas: ". main .";
+    grid-template-columns: 1rem calc(100vw - 2rem) 1rem;
+}
+
+main {
+    grid-area: main;
+}
+
+main > section {
+    display: grid;
+    grid-column: 1 / -1;
+    grid-template-columns: repeat(6, 1fr);
+}
+
+.content {
+    grid-column: 1/-1;
+    display: grid;
+    grid-template-columns: 1fr;
+}
+
+.tabbed > input[type="radio"] {
+    display: none;
+}
+
+.tabbed > nav {
+    scroll-behavior: smooth;
+}
+
+.tabbed > nav > label {
+    white-space: nowrap;
+}
+
+.tabbed > section > div {
+    display: none;
+}
+
+.tabbed [id*="toggle-1"]:checked ~ nav [for*="toggle-1"],
+.tabbed [id*="toggle-2"]:checked ~ nav [for*="toggle-2"],
+.tabbed [id*="toggle-3"]:checked ~ nav [for*="toggle-3"],
+.tabbed [id*="toggle-4"]:checked ~ nav [for*="toggle-4"],
+.tabbed [id*="toggle-5"]:checked ~ nav [for*="toggle-5"],
+.tabbed [id*="toggle-6"]:checked ~ nav [for*="toggle-6"],
+.tabbed [id*="toggle-7"]:checked ~ nav [for*="toggle-7"],
+.tabbed [id*="toggle-8"]:checked ~ nav [for*="toggle-8"],
+.tabbed [id*="toggle-9"]:checked ~ nav [for*="toggle-9"],
+.tabbed [id*="toggle-10"]:checked ~ nav [for*="toggle-10"],
+.tabbed [id*="toggle-11"]:checked ~ nav [for*="toggle-11"],
+.tabbed [id*="toggle-12"]:checked ~ nav [for*="toggle-12"],
+.tabbed [id*="toggle-13"]:checked ~ nav [for*="toggle-13"],
+.tabbed [id*="toggle-14"]:checked ~ nav [for*="toggle-14"],
+.tabbed [id*="toggle-15"]:checked ~ nav [for*="toggle-15"],
+.tabbed [id*="toggle-16"]:checked ~ nav [for*="toggle-17"],
+.tabbed [id*="toggle-17"]:checked ~ nav [for*="toggle-18"],
+.tabbed [id*="toggle-18"]:checked ~ nav [for*="toggle-19"],
+.tabbed [id*="toggle-19"]:checked ~ nav [for*="toggle-19"],
+.tabbed [id*="toggle-20"]:checked ~ nav [for*="toggle-20"] {
+    border-bottom: 2px solid red;
+}
+
+.tabbed [id*="toggle-1"]:checked ~ section [id*="tab-1"],
+.tabbed [id*="toggle-2"]:checked ~ section [id*="tab-2"],
+.tabbed [id*="toggle-3"]:checked ~ section [id*="tab-3"],
+.tabbed [id*="toggle-4"]:checked ~ section [id*="tab-4"],
+.tabbed [id*="toggle-5"]:checked ~ section [id*="tab-5"],
+.tabbed [id*="toggle-6"]:checked ~ section [id*="tab-6"],
+.tabbed [id*="toggle-7"]:checked ~ section [id*="tab-7"],
+.tabbed [id*="toggle-8"]:checked ~ section [id*="tab-8"],
+.tabbed [id*="toggle-9"]:checked ~ section [id*="tab-9"],
+.tabbed [id*="toggle-10"]:checked ~ section [id*="tab-10"],
+.tabbed [id*="toggle-11"]:checked ~ section [id*="tab-11"],
+.tabbed [id*="toggle-12"]:checked ~ section [id*="tab-12"],
+.tabbed [id*="toggle-13"]:checked ~ section [id*="tab-31"],
+.tabbed [id*="toggle-14"]:checked ~ section [id*="tab-41"],
+.tabbed [id*="toggle-15"]:checked ~ section [id*="tab-15"],
+.tabbed [id*="toggle-16"]:checked ~ section [id*="tab-16"],
+.tabbed [id*="toggle-17"]:checked ~ section [id*="tab-17"],
+.tabbed [id*="toggle-18"]:checked ~ section [id*="tab-38"],
+.tabbed [id*="toggle-19"]:checked ~ section [id*="tab-49"],
+.tabbed [id*="toggle-20"]:checked ~ section [id*="tab-20"] {
+    display: block;
+}

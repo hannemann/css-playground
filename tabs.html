@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Document</title>
+        <link rel="stylesheet" href="/css/properties.css" />
+        <link rel="stylesheet" href="/css/scroller-snap.css" />
+        <link rel="stylesheet" href="/css/tabs.css" />
+    </head>
+    <body>
+        <main>
+            <section>
+                <div class="content">
+                    <div class="tabbed">
+                        <input
+                            type="radio"
+                            name="tabbed"
+                            id="toggle-1"
+                            checked
+                        />
+                        <input type="radio" name="tabbed" id="toggle-2" />
+                        <input type="radio" name="tabbed" id="toggle-3" />
+                        <input type="radio" name="tabbed" id="toggle-4" />
+                        <input type="radio" name="tabbed" id="toggle-5" />
+                        <input type="radio" name="tabbed" id="toggle-6" />
+
+                        <nav class="scroller snap">
+                            <label for="toggle-1">Übersicht</label>
+                            <label for="toggle-2">Bestellungen</label>
+                            <label for="toggle-3">Wunschliste</label>
+                            <label for="toggle-4"> Gespeicherte Suchen </label>
+                            <label for="toggle-5"> Persöhnliche Daten </label>
+                            <label for="toggle-6">Adressen</label>
+                        </nav>
+
+                        <section>
+                            <div id="tab-1">
+                                <h2>Übersicht</h2>
+                            </div>
+                            <div id="tab-2">
+                                <h2>Bestellungen</h2>
+                            </div>
+                            <div id="tab-3">
+                                <h2>Wunschliste</h2>
+                            </div>
+                            <div id="tab-4">
+                                <h2>Gespeicherte Suchen</h2>
+                            </div>
+                            <div id="tab-5">
+                                <h2>Persöhnliche Daten</h2>
+                            </div>
+                            <div id="tab-6">
+                                <h2>Adressen</h2>
+                            </div>
+                        </section>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <script>
+            document.querySelectorAll("label").forEach((l) =>
+                l.addEventListener("click", () => {
+                    const p = l.parentNode;
+                    const rectParent = p.getBoundingClientRect();
+                    const rectLabel = l.getBoundingClientRect();
+                    if (
+                        rectLabel.x < rectParent.x ||
+                        rectLabel.right > rectParent.right
+                    ) {
+                        p.scrollTo({ left: l.offsetLeft });
+                    }
+                })
+            );
+        </script>
+    </body>
+</html>
